@@ -1,69 +1,50 @@
-import { isDocumentReference, resolveDocumentContent } from './resolver';
+import matter from 'gray-matter';
+import { Document, CompilationContext } from './types';
 
 /**
- * Creates a regex pattern for matching a variable placeholder
- * @param varName - The variable name to match
- * @returns A global regex that matches {{ varName }} with optional whitespace
+ * Processes variable substitution
+ * 
+ * This module handles:
+ * - Substituting {{ var }} placeholders with values
+ * - Resolving @ references in variable values
+ * - Removing vars from output frontmatter after processing
  */
-export function createVariablePattern(varName: string): RegExp {
-  return new RegExp(`{{\\s*${varName}\\s*}}`, 'g');
-}
 
 /**
- * Substitutes all variables in content with their values
- * @param content - The content containing variable placeholders
- * @param variables - Map of variable names to values
- * @param resolver - Function to resolve document references
- * @returns The content with all variables substituted
+ * Process variable substitution in a document
  */
-export async function substituteVariables(
-  content: string,
-  variables: Record<string, any>,
-  resolver: (path: string) => Promise<string>
-): Promise<string> {
-  let result = content;
+export async function processVariables(context: CompilationContext): Promise<Document> {
+  const { document, resolver } = context;
   
-  for (const [key, value] of Object.entries(variables)) {
-    const pattern = createVariablePattern(key);
+  // If no vars, return document as-is
+  if (!document.frontmatter.vars) {
+    return document;
+  }
+  
+  let processedContent = document.content;
+  const vars = document.frontmatter.vars;
+  
+  // Substitute each variable
+  for (const [key, value] of Object.entries(vars)) {
+    const pattern = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
     
-    if (isDocumentReference(value)) {
-      // Resolve document reference and substitute
-      const resolvedContent = await resolveDocumentContent(value, resolver);
-      result = result.replace(pattern, resolvedContent);
+    if (typeof value === 'string' && value.startsWith('@')) {
+      // Resolve document reference
+      const docPath = value.slice(1);
+      const docSource = await resolver(docPath);
+      const { content } = matter(docSource);
+      processedContent = processedContent.replace(pattern, content);
     } else {
-      // Simple string substitution
-      result = result.replace(pattern, String(value));
+      // Simple substitution
+      processedContent = processedContent.replace(pattern, String(value));
     }
   }
   
-  return result;
-}
-
-/**
- * Merges parent and child variables, with child overriding parent
- * @param parentVars - Parent variables (if any)
- * @param childVars - Child variables (if any)
- * @returns Merged variables object
- */
-export function mergeVariables(
-  parentVars?: Record<string, any>,
-  childVars?: Record<string, any>
-): Record<string, any> | undefined {
-  if (!parentVars && !childVars) {
-    return undefined;
-  }
+  // Remove vars from frontmatter after processing
+  const { vars: _, ...cleanFrontmatter } = document.frontmatter;
   
   return {
-    ...parentVars,
-    ...childVars
+    frontmatter: cleanFrontmatter,
+    content: processedContent
   };
-}
-
-/**
- * Checks if an object has any variables defined
- * @param vars - The variables object to check
- * @returns True if variables exist
- */
-export function hasVariables(vars?: Record<string, any>): boolean {
-  return vars !== undefined && Object.keys(vars).length > 0;
 }

@@ -1,65 +1,53 @@
-import { resolveDocumentContent, isStandaloneReference, extractLineAtIndex } from './resolver';
+import matter from 'gray-matter';
+import { Document, CompilationContext } from './types';
 
 /**
- * Pattern for matching @ references in content
+ * Processes @ transclusion references
+ * 
+ * This module handles:
+ * - Finding @ references in content
+ * - Replacing standalone @ references with document content
+ * - Preserving inline @ references (e.g., @username)
  */
-export const TRANSCLUSION_PATTERN = /@([a-zA-Z0-9\-_/]+)/g;
 
 /**
- * Match result for a transclusion reference
+ * Process transclusion references in a document
  */
-export interface TransclusionMatch {
-  reference: string;
-  index: number;
-}
-
-/**
- * Finds all @ references in content
- * @param content - The content to search
- * @returns Array of transclusion matches
- */
-export function findTransclusions(content: string): TransclusionMatch[] {
-  const matches: TransclusionMatch[] = [];
-  const pattern = new RegExp(TRANSCLUSION_PATTERN.source, TRANSCLUSION_PATTERN.flags);
-  let match;
+export async function processTransclusions(context: CompilationContext): Promise<Document> {
+  const { document, resolver } = context;
   
-  while ((match = pattern.exec(content)) !== null) {
-    matches.push({
-      reference: match[0],
-      index: match.index
-    });
-  }
-  
-  return matches;
-}
-
-/**
- * Processes all transclusions in content
- * @param content - The content containing @ references
- * @param resolver - Function to resolve document content
- * @returns Content with transclusions replaced
- */
-export async function processTransclusions(
-  content: string,
-  resolver: (path: string) => Promise<string>
-): Promise<string> {
-  let result = content;
-  const matches = findTransclusions(content);
+  let processedContent = document.content;
+  const pattern = /@([a-zA-Z0-9\-_/]+)/g;
+  const matches = Array.from(processedContent.matchAll(pattern));
   
   for (const match of matches) {
-    const line = extractLineAtIndex(content, match.index);
+    const reference = match[0];
+    const path = match[1];
+    const index = match.index!;
     
-    // Only process if @ reference is standalone on its line
-    if (isStandaloneReference(line, match.reference)) {
+    // Check if reference is standalone on its line
+    const lineStart = processedContent.lastIndexOf('\n', index) + 1;
+    const lineEnd = processedContent.indexOf('\n', index);
+    const line = processedContent.substring(
+      lineStart,
+      lineEnd === -1 ? undefined : lineEnd
+    ).trim();
+    
+    if (line === reference) {
       try {
-        const resolvedContent = await resolveDocumentContent(match.reference, resolver);
-        result = result.replace(match.reference, resolvedContent);
+        // Resolve and replace
+        const docSource = await resolver(path);
+        const { content } = matter(docSource);
+        processedContent = processedContent.replace(reference, content);
       } catch (error) {
-        // If resolver fails, leave the @ reference as-is
-        console.warn(`Could not resolve ${match.reference}: ${error}`);
+        // Leave reference as-is if resolution fails
+        console.warn(`Could not resolve ${reference}: ${error}`);
       }
     }
   }
   
-  return result;
+  return {
+    frontmatter: document.frontmatter,
+    content: processedContent
+  };
 }
