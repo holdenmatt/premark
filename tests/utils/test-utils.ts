@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { Document, DocumentResolver, parseDocument } from '../src/types';
+import { Document, DocumentResolver, parseDocument } from '../../src/types';
 
 /**
  * Prepared test case ready for execution

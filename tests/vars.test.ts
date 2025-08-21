@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { join } from 'path';
 import { processVars } from '../src/vars';
 import { documentsEqual } from '../src/types';
-import { loadMarkdownTests } from './test-utils';
+import { loadMarkdownTests } from './utils/test-utils';
 
 describe('Vars', () => {
   loadMarkdownTests(
