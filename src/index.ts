@@ -1,4 +1,5 @@
-export { compile, type CompileOptions, type ParsedDoc } from './compiler';
+export { compile, type CompileOptions } from './compiler2';
+export type { ParsedDoc } from './compiler';
 
 // File system resolver for common use case
 import { readFile } from 'fs/promises';
