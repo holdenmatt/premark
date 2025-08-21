@@ -5,7 +5,7 @@
 /**
  * A document with parsed frontmatter and content
  */
-export interface Document {
+export type Document = {
   frontmatter: Record<string, any>;
   content: string;
 }
@@ -18,7 +18,7 @@ export type DocumentResolver = (path: string) => Promise<string>;
 /**
  * Context passed through the compilation pipeline
  */
-export interface CompilationContext {
+export type CompilationContext = {
   document: Document;
   resolver: DocumentResolver;
   visited?: Set<string>;
@@ -32,7 +32,7 @@ export type DocumentTransform = (context: CompilationContext) => Promise<Documen
 /**
  * Configuration for a specific feature/module
  */
-export interface ModuleConfig {
+export type ModuleConfig = {
   enabled?: boolean;
   [key: string]: any;
 }

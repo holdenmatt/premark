@@ -7,7 +7,7 @@ import { processTransclusions } from './transclusion';
 /**
  * Compiler options
  */
-export interface CompileOptions {
+export type CompileOptions = {
   resolver: DocumentResolver;
 }
 
