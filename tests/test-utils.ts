@@ -1,25 +1,11 @@
 import { readFileSync } from 'fs';
-import matter from 'gray-matter';
-import { Document, DocumentResolver } from '../src/types';
-
-/**
- * Raw test case parsed from markdown
- */
-type RawTestCase = {
-  name: string;
-  description: string;
-  files?: Record<string, string>;
-  input?: string;
-  output?: string;
-  error?: string;
-}
+import { Document, DocumentResolver, parseDocument } from '../src/types';
 
 /**
  * Prepared test case ready for execution
  */
 export type TestCase = {
   name: string;
-  description: string;
   context: {
     document: Document;
     resolver: DocumentResolver;
@@ -29,10 +15,26 @@ export type TestCase = {
 }
 
 /**
- * Parse raw test cases from markdown format with XML tags
+ * Load test cases from a markdown file and run callback for each category
  */
-function parseRawTestCases(markdown: string): RawTestCase[] {
-  const tests: RawTestCase[] = [];
+export function loadMarkdownTests(
+  filePath: string,
+  callback: (category: string, tests: TestCase[]) => void
+) {
+  const markdown = readFileSync(filePath, 'utf-8');
+  
+  // Parse and prepare test cases
+  const testCases = parseTestCases(markdown);
+  
+  // Group by category and callback
+  groupByCategory(markdown, testCases, callback);
+}
+
+/**
+ * Parse test cases from markdown format with XML tags
+ */
+function parseTestCases(markdown: string): TestCase[] {
+  const tests: TestCase[] = [];
 
   // First, temporarily remove XML blocks to avoid matching any markdown headings inside them
   const xmlBlocks: string[] = [];
@@ -57,91 +59,47 @@ function parseRawTestCases(markdown: string): RawTestCase[] {
     // Only process sections that contain test content (XML tags)
     if (!restoredSection.includes('<input>') && !restoredSection.includes('<file')) continue;
     
-    const test: RawTestCase = {
-      name,
-      description: lines[1]?.trim() || '',
-      files: {}
-    };
-    
-    // Extract XML content
+    // Extract raw test data
+    const files: Record<string, string> = {};
     const fileMatches = restoredSection.matchAll(/<file name="([^"]+)">([\s\S]*?)<\/file>/g);
     for (const match of fileMatches) {
-      test.files![match[1]] = match[2].trim();
+      files[match[1]] = match[2].trim();
     }
     
     const inputMatch = restoredSection.match(/<input>([\s\S]*?)<\/input>/);
-    if (inputMatch) test.input = inputMatch[1].trim();
-    
     const outputMatch = restoredSection.match(/<output>([\s\S]*?)<\/output>/);
-    if (outputMatch) test.output = outputMatch[1].trim();
-    
     const errorMatch = restoredSection.match(/<error>([\s\S]*?)<\/error>/);
-    if (errorMatch) test.error = errorMatch[1];
     
-    tests.push(test);
+    // Skip if no input
+    if (!inputMatch) continue;
+    
+    // Parse input and output as Documents
+    const inputDoc = parseDocument(inputMatch[1].trim());
+    const outputDoc = outputMatch ? parseDocument(outputMatch[1].trim()) : undefined;
+    
+    // Create test case with prepared context
+    tests.push({
+      name,
+      context: {
+        document: inputDoc,
+        resolver: createResolver(files)
+      },
+      expectedOutput: outputDoc,
+      expectedError: errorMatch?.[1]
+    });
   }
   
   return tests;
 }
 
 /**
- * Mock a test resolver that returns content from a map of files
+ * Group test cases by category based on H2 headers
  */
-function createTestResolver(files: Record<string, string>): DocumentResolver {
-  return async (path: string): Promise<string> => {
-    if (files[path]) {
-      return files[path];
-    }
-    throw new Error(`Document not found: ${path}`);
-  };
-}
-
-/**
- * Parse input string into a Document
- */
-function parseInput(input: string): Document {
-  const { data: frontmatter, content } = matter(input);
-  return { frontmatter, content };
-}
-
-/**
- * Prepare a raw test case into an executable test case
- */
-function prepareTestCase(raw: RawTestCase): TestCase | null {
-  if (!raw.input) return null;
-  
-  const document = parseInput(raw.input);
-  const resolver = createTestResolver(raw.files || {});
-  
-  return {
-    name: raw.name,
-    description: raw.description,
-    context: { document, resolver },
-    expectedOutput: raw.output ? parseInput(raw.output) : undefined,
-    expectedError: raw.error
-  };
-}
-
-/**
- * Load test cases from a markdown file and run callback for each category
- */
-export function loadMarkdownTests(
-  filePath: string,
+function groupByCategory(
+  markdown: string, 
+  testCases: TestCase[],
   callback: (category: string, tests: TestCase[]) => void
 ) {
-  const markdown = readFileSync(filePath, 'utf-8');
-  
-  // Parse raw test cases
-  const rawTests = parseRawTestCases(markdown);
-  
-  // Prepare test cases
-  const preparedTests: TestCase[] = [];
-  for (const raw of rawTests) {
-    const prepared = prepareTestCase(raw);
-    if (prepared) preparedTests.push(prepared);
-  }
-  
-  // Group by category based on H2 headers
   const categories = new Map<string, TestCase[]>();
   let currentCategory = 'General';
   
@@ -150,17 +108,29 @@ export function loadMarkdownTests(
       currentCategory = line.slice(3).trim();
       categories.set(currentCategory, []);
     } else {
-      const test = preparedTests.find(t => line.includes(t.name));
+      const test = testCases.find(t => line.includes(t.name));
       if (test && !categories.get(currentCategory)?.includes(test)) {
         categories.get(currentCategory)?.push(test);
       }
     }
   }
   
-  // Call back with each category
+  // Call back with each category that has tests
   categories.forEach((tests, category) => {
     if (tests.length > 0) {
       callback(category, tests);
     }
   });
+}
+
+/**
+ * Create a resolver function for mock files
+ */
+function createResolver(files: Record<string, string>): DocumentResolver {
+  return async (path: string): Promise<string> => {
+    if (files[path]) {
+      return files[path];
+    }
+    throw new Error(`Document not found: ${path}`);
+  };
 }

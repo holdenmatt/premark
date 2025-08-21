@@ -1,3 +1,5 @@
+import matter from 'gray-matter';
+
 /**
  * Core types for the premark compiler
  */
@@ -21,6 +23,14 @@ export type DocumentResolver = (path: string) => Promise<string>;
 export type CompilationContext = {
   document: Document;
   resolver: DocumentResolver;
+}
+
+/**
+ * Parse a markdown string into a Document
+ */
+export function parseDocument(text: string): Document {
+  const { data: frontmatter, content } = matter(text);
+  return { frontmatter, content };
 }
 
 /**
