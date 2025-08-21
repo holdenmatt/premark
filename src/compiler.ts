@@ -8,6 +8,13 @@ import {
   substituteVariables,
   mergeVariables
 } from './vars';
+import {
+  checkCircularExtends,
+  validateContentSlots,
+  insertChildContent,
+  mergeFrontmatter,
+  hasExtends
+} from './extends';
 
 export interface CompileOptions {
   resolver: (path: string) => Promise<string>;
@@ -48,13 +55,11 @@ async function compileWithFrontmatter(
   let mergedFrontmatter = { ...frontmatter };
   
   // Handle extends (inheritance)
-  if (frontmatter.extends) {
+  if (hasExtends(frontmatter)) {
     const parentPath = frontmatter.extends;
     
     // Check for circular extends
-    if (visited.has(parentPath)) {
-      throw new Error(`Circular extends detected: ${parentPath}`);
-    }
+    checkCircularExtends(parentPath, visited);
     
     const parentSource = await options.resolver(parentPath);
     const parent = await compileWithFrontmatter(
@@ -62,6 +67,9 @@ async function compileWithFrontmatter(
       options,
       new Set([...visited, parentPath])
     );
+    
+    // Validate content slots in parent
+    validateContentSlots(parent.content);
     
     // Merge vars (child overrides parent)
     const mergedVars = mergeVariables(
@@ -73,22 +81,10 @@ async function compileWithFrontmatter(
     }
     
     // Merge other frontmatter (child overrides)
-    mergedFrontmatter = {
-      ...parent.frontmatter,
-      ...mergedFrontmatter,
-    };
+    mergedFrontmatter = mergeFrontmatter(parent.frontmatter, mergedFrontmatter);
     
     // Insert content (replace {{ content }} or append)
-    const contentMatches = parent.content.match(/\{\{\s*content\s*\}\}/g);
-    if (contentMatches && contentMatches.length > 1) {
-      throw new Error(`Multiple {{ content }} markers found in parent. Only one content slot is allowed.`);
-    }
-    
-    if (parent.content.includes('{{ content }}')) {
-      compiledContent = parent.content.replace('{{ content }}', content);
-    } else {
-      compiledContent = parent.content + '\n\n' + content;
-    }
+    compiledContent = insertChildContent(parent.content, content);
     
     // Remove extends from output frontmatter
     delete mergedFrontmatter.extends;
