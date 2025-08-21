@@ -16,38 +16,41 @@ import { Document, CompilationContext } from './types';
 export async function processTransclusions(context: CompilationContext): Promise<Document> {
   const { document, resolver } = context;
   
-  let processedContent = document.content;
-  const pattern = /@([a-zA-Z0-9\-_/]+)/g;
-  const matches = Array.from(processedContent.matchAll(pattern));
+  const lines = document.content.split('\n');
+  const processedLines: string[] = [];
   
-  for (const match of matches) {
-    const reference = match[0];
-    const path = match[1];
-    const index = match.index!;
+  for (const line of lines) {
+    // Check if line starts with optional whitespace followed by @
+    const match = line.match(/^(\s*)@([a-zA-Z0-9\-_/.]+)\s*$/);
     
-    // Check if reference is standalone on its line
-    const lineStart = processedContent.lastIndexOf('\n', index) + 1;
-    const lineEnd = processedContent.indexOf('\n', index);
-    const line = processedContent.substring(
-      lineStart,
-      lineEnd === -1 ? undefined : lineEnd
-    ).trim();
-    
-    if (line === reference) {
-      try {
-        // Resolve and replace
-        const docSource = await resolver(path);
-        const { content } = matter(docSource);
-        processedContent = processedContent.replace(reference, content);
-      } catch (error) {
-        // Leave reference as-is if resolution fails
-        console.warn(`Could not resolve ${reference}: ${error}`);
+    if (match) {
+      const indent = match[1];
+      const path = match[2];
+      
+      // Resolve and replace the entire line
+      const docSource = await resolver(path);
+      const { content } = matter(docSource);
+      
+      if (content === '') {
+        // For empty documents, replace the line with empty string
+        processedLines.push('');
+      } else {
+        // Apply indentation to each line of transcluded content
+        const transcludedLines = content.split('\n');
+        const indentedLines = transcludedLines.map(l => 
+          l ? indent + l : l  // Don't add indent to empty lines
+        );
+        
+        processedLines.push(...indentedLines);
       }
+    } else {
+      // Not a transclusion line, keep as-is
+      processedLines.push(line);
     }
   }
   
   return {
     frontmatter: document.frontmatter,
-    content: processedContent
+    content: processedLines.join('\n')
   };
 }
