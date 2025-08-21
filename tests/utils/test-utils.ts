@@ -128,7 +128,7 @@ function groupByCategory(
  */
 function createResolver(files: Record<string, string>): DocumentResolver {
   return async (path: string): Promise<string> => {
-    if (files[path]) {
+    if (path in files) {
       return files[path];
     }
     throw new Error(`Document not found: ${path}`);
