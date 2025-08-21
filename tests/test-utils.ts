@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import matter from 'gray-matter';
 import { Document, DocumentResolver } from '../src/types';
 
@@ -104,15 +105,6 @@ export function createTestResolver(files: Record<string, string>): DocumentResol
 }
 
 /**
- * Format a document as markdown with optional frontmatter
- */
-export function formatDocument(doc: Document): string {
-  return Object.keys(doc.frontmatter).length > 0
-    ? matter.stringify(doc.content, doc.frontmatter).trim()
-    : doc.content.trim();
-}
-
-/**
  * Parse input string into a Document
  */
 export function parseInput(input: string): Document {
@@ -121,12 +113,14 @@ export function parseInput(input: string): Document {
 }
 
 /**
- * Load and iterate through test cases from a markdown file
+ * Load test cases from a markdown file and run callback for each category
  */
-export function forEachTest(
-  markdown: string,
+export function loadMarkdownTests(
+  filePath: string,
   callback: (category: string, tests: TestCase[]) => void
 ) {
+  const markdown = readFileSync(filePath, 'utf-8');
+  
   const testCases = parseTestCases(markdown);
   const categories = groupTestsByCategory(markdown, testCases);
   
@@ -138,4 +132,24 @@ export function forEachTest(
       callback(category, validTests);
     }
   });
+}
+
+/**
+ * Prepare a test case for execution
+ */
+export function prepareTest(test: TestCase) {
+  const document = parseInput(test.input!);
+  const resolver = createTestResolver(test.files || {});
+  const context = { document, resolver };
+  
+  // Parse expected output as a Document
+  const expectedOutput = test.output 
+    ? parseInput(test.output)
+    : undefined;
+  
+  return { 
+    context, 
+    expectedOutput,
+    expectedError: test.error
+  };
 }
