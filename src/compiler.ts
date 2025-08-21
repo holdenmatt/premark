@@ -1,10 +1,13 @@
 import matter from 'gray-matter';
 import {
-  isDocumentReference,
   resolveDocumentContent,
   isStandaloneReference,
   extractLineAtIndex
 } from './resolver';
+import {
+  substituteVariables,
+  mergeVariables
+} from './vars';
 
 export interface CompileOptions {
   resolver: (path: string) => Promise<string>;
@@ -61,11 +64,12 @@ async function compileWithFrontmatter(
     );
     
     // Merge vars (child overrides parent)
-    if (parent.frontmatter.vars || frontmatter.vars) {
-      mergedFrontmatter.vars = {
-        ...parent.frontmatter.vars,
-        ...frontmatter.vars
-      };
+    const mergedVars = mergeVariables(
+      parent.frontmatter.vars,
+      frontmatter.vars
+    );
+    if (mergedVars) {
+      mergedFrontmatter.vars = mergedVars;
     }
     
     // Merge other frontmatter (child overrides)
@@ -91,18 +95,12 @@ async function compileWithFrontmatter(
   }
   
   // Handle vars substitution
-  const vars = mergedFrontmatter.vars || {};
-  for (const [key, value] of Object.entries(vars)) {
-    const pattern = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
-    
-    if (isDocumentReference(value)) {
-      // It's a document reference, resolve it
-      const resolvedContent = await resolveDocumentContent(value, options.resolver);
-      compiledContent = compiledContent.replace(pattern, resolvedContent);
-    } else {
-      // Simple variable substitution
-      compiledContent = compiledContent.replace(pattern, String(value));
-    }
+  if (mergedFrontmatter.vars) {
+    compiledContent = await substituteVariables(
+      compiledContent,
+      mergedFrontmatter.vars,
+      options.resolver
+    );
   }
   
   // Handle @ transclusion in content
