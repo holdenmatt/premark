@@ -1,4 +1,10 @@
 import matter from 'gray-matter';
+import {
+  isDocumentReference,
+  resolveDocumentContent,
+  isStandaloneReference,
+  extractLineAtIndex
+} from './resolver';
 
 export interface CompileOptions {
   resolver: (path: string) => Promise<string>;
@@ -89,11 +95,9 @@ async function compileWithFrontmatter(
   for (const [key, value] of Object.entries(vars)) {
     const pattern = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
     
-    if (typeof value === 'string' && value.startsWith('@')) {
-      // It's a document reference, resolve it (strip @ prefix)
-      const docPath = value.slice(1);
-      const docContent = await options.resolver(docPath);
-      const { content: resolvedContent } = matter(docContent);
+    if (isDocumentReference(value)) {
+      // It's a document reference, resolve it
+      const resolvedContent = await resolveDocumentContent(value, options.resolver);
       compiledContent = compiledContent.replace(pattern, resolvedContent);
     } else {
       // Simple variable substitution
@@ -106,23 +110,18 @@ async function compileWithFrontmatter(
   const matches = compiledContent.matchAll(transclusionPattern);
   
   for (const match of matches) {
-    const path = match[1];
-    // Only process if it's on its own line (not inline reference)
-    const lineStart = compiledContent.lastIndexOf('\n', match.index!) + 1;
-    const lineEnd = compiledContent.indexOf('\n', match.index!);
-    const line = compiledContent.substring(
-      lineStart,
-      lineEnd === -1 ? undefined : lineEnd
-    ).trim();
+    const reference = match[0];
     
-    if (line === match[0]) {
+    // Only process if it's on its own line (not inline reference)
+    const line = extractLineAtIndex(compiledContent, match.index!);
+    
+    if (isStandaloneReference(line, reference)) {
       try {
-        const docContent = await options.resolver(path);
-        const { content: resolvedContent } = matter(docContent);
-        compiledContent = compiledContent.replace(match[0], resolvedContent);
+        const resolvedContent = await resolveDocumentContent(reference, options.resolver);
+        compiledContent = compiledContent.replace(reference, resolvedContent);
       } catch (error) {
         // If resolver fails, leave the @ reference as-is
-        console.warn(`Could not resolve ${match[0]}: ${error}`);
+        console.warn(`Could not resolve ${reference}: ${error}`);
       }
     }
   }

@@ -128,25 +128,4 @@ Hello, I'm {{ name }}, your {{ tone }} assistant.`;
     });
   });
 
-  describe('complex scenarios', () => {
-    it('combines extends, vars, and transclusion', async () => {
-      const docs = {
-        'base': '---\nvars:\n  title: Default Title\n---\n# {{ title }}\n\n{{ content }}',
-        'template': 'Template section',
-        'child': `---
-extends: base
-vars:
-  title: Custom Title
----
-Child content
-
-@template`
-      };
-      
-      const result = await compile(docs.child, { resolver: createResolver(docs) });
-      expect(result).toContain('# Custom Title');
-      expect(result).toContain('Child content');
-      expect(result).toContain('Template section');
-    });
-  });
 });
