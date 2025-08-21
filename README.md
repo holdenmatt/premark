@@ -24,7 +24,7 @@ extends: @user/base-spec
 Your content here
 ```
 
-**Variables** - Define and substitute values:
+**Vars** - Define and substitute values:
 ```markdown
 ---
 vars:
