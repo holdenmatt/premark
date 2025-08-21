@@ -14,8 +14,11 @@ import { Document, CompilationContext } from './types';
 /**
  * Process extends directive in a document
  */
-export async function processExtends(context: CompilationContext): Promise<Document> {
-  const { document, resolver, visited = new Set() } = context;
+export async function processExtends(
+  context: CompilationContext,
+  _visited: Set<string> = new Set()
+): Promise<Document> {
+  const { document, resolver } = context;
   
   // If no extends, return document as-is
   if (!document.frontmatter.extends) {
@@ -25,7 +28,7 @@ export async function processExtends(context: CompilationContext): Promise<Docum
   const parentPath = document.frontmatter.extends;
   
   // Check for circular extends
-  if (visited.has(parentPath)) {
+  if (_visited.has(parentPath)) {
     throw new Error(`Circular extends detected: ${parentPath}`);
   }
   
@@ -34,11 +37,13 @@ export async function processExtends(context: CompilationContext): Promise<Docum
   const { data: parentFrontmatter, content: parentContent } = matter(parentSource);
   
   // Recursively process parent's extends
-  const processedParent = await processExtends({
-    document: { frontmatter: parentFrontmatter, content: parentContent },
-    resolver,
-    visited: new Set([...visited, parentPath])
-  });
+  const processedParent = await processExtends(
+    {
+      document: { frontmatter: parentFrontmatter, content: parentContent },
+      resolver
+    },
+    new Set([..._visited, parentPath])
+  );
   
   // Validate content slots
   const contentSlots = processedParent.content.match(/\{\{\s*content\s*\}\}/g);

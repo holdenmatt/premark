@@ -7,3 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 At the start of each session, read:
 1. Any `**/README.md` docs across the project
 2. Any `**/README.*.md` docs across the project
+
+## 💻 Code Style
+
+### TypeScript
+- **Always use `type` instead of `interface`** for consistency

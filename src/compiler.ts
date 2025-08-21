@@ -29,8 +29,7 @@ export async function compile(source: string, options: CompileOptions): Promise<
   // Create context
   const context: CompilationContext = {
     document,
-    resolver: options.resolver,
-    visited: new Set()
+    resolver: options.resolver
   };
   
   // Pipeline stages (order matters!)

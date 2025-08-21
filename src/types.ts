@@ -21,18 +21,4 @@ export type DocumentResolver = (path: string) => Promise<string>;
 export type CompilationContext = {
   document: Document;
   resolver: DocumentResolver;
-  visited?: Set<string>;
-}
-
-/**
- * A transformation function that processes a document
- */
-export type DocumentTransform = (context: CompilationContext) => Promise<Document>;
-
-/**
- * Configuration for a specific feature/module
- */
-export type ModuleConfig = {
-  enabled?: boolean;
-  [key: string]: any;
 }
