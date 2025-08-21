@@ -1,10 +1,5 @@
 import matter from 'gray-matter';
 import {
-  resolveDocumentContent,
-  isStandaloneReference,
-  extractLineAtIndex
-} from './resolver';
-import {
   substituteVariables,
   mergeVariables
 } from './vars';
@@ -15,6 +10,9 @@ import {
   mergeFrontmatter,
   hasExtends
 } from './extends';
+import {
+  processTransclusions
+} from './transclusion';
 
 export interface CompileOptions {
   resolver: (path: string) => Promise<string>;
@@ -100,25 +98,7 @@ async function compileWithFrontmatter(
   }
   
   // Handle @ transclusion in content
-  const transclusionPattern = /@([a-zA-Z0-9\-_/]+)/g;
-  const matches = compiledContent.matchAll(transclusionPattern);
-  
-  for (const match of matches) {
-    const reference = match[0];
-    
-    // Only process if it's on its own line (not inline reference)
-    const line = extractLineAtIndex(compiledContent, match.index!);
-    
-    if (isStandaloneReference(line, reference)) {
-      try {
-        const resolvedContent = await resolveDocumentContent(reference, options.resolver);
-        compiledContent = compiledContent.replace(reference, resolvedContent);
-      } catch (error) {
-        // If resolver fails, leave the @ reference as-is
-        console.warn(`Could not resolve ${reference}: ${error}`);
-      }
-    }
-  }
+  compiledContent = await processTransclusions(compiledContent, options.resolver);
   
   // Remove vars from output if it was only used for substitution
   if (mergedFrontmatter.vars) {
