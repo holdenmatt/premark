@@ -3,9 +3,9 @@ import matter from 'gray-matter';
 import { Document, DocumentResolver } from '../src/types';
 
 /**
- * Test case parsed from markdown
+ * Raw test case parsed from markdown
  */
-export type TestCase = {
+type RawTestCase = {
   name: string;
   description: string;
   files?: Record<string, string>;
@@ -15,10 +15,24 @@ export type TestCase = {
 }
 
 /**
- * Parse test cases from markdown format with XML tags
+ * Prepared test case ready for execution
  */
-export function parseTestCases(markdown: string): TestCase[] {
-  const tests: TestCase[] = [];
+export type TestCase = {
+  name: string;
+  description: string;
+  context: {
+    document: Document;
+    resolver: DocumentResolver;
+  };
+  expectedOutput?: Document;
+  expectedError?: string;
+}
+
+/**
+ * Parse raw test cases from markdown format with XML tags
+ */
+function parseRawTestCases(markdown: string): RawTestCase[] {
+  const tests: RawTestCase[] = [];
 
   // First, temporarily remove XML blocks to avoid matching any markdown headings inside them
   const xmlBlocks: string[] = [];
@@ -43,7 +57,7 @@ export function parseTestCases(markdown: string): TestCase[] {
     // Only process sections that contain test content (XML tags)
     if (!restoredSection.includes('<input>') && !restoredSection.includes('<file')) continue;
     
-    const test: TestCase = {
+    const test: RawTestCase = {
       name,
       description: lines[1]?.trim() || '',
       files: {}
@@ -71,31 +85,9 @@ export function parseTestCases(markdown: string): TestCase[] {
 }
 
 /**
- * Group test cases by category based on H2 headers
- */
-export function groupTestsByCategory(markdown: string, testCases: TestCase[]): Map<string, TestCase[]> {
-  const categories = new Map<string, TestCase[]>();
-  let currentCategory = 'General';
-  
-  for (const line of markdown.split('\n')) {
-    if (line.startsWith('## ')) {
-      currentCategory = line.slice(3).trim();
-      categories.set(currentCategory, []);
-    } else {
-      const test = testCases.find(t => line.includes(t.name));
-      if (test && !categories.get(currentCategory)?.includes(test)) {
-        categories.get(currentCategory)?.push(test);
-      }
-    }
-  }
-  
-  return categories;
-}
-
-/**
  * Mock a test resolver that returns content from a map of files
  */
-export function createTestResolver(files: Record<string, string>): DocumentResolver {
+function createTestResolver(files: Record<string, string>): DocumentResolver {
   return async (path: string): Promise<string> => {
     if (files[path]) {
       return files[path];
@@ -107,9 +99,27 @@ export function createTestResolver(files: Record<string, string>): DocumentResol
 /**
  * Parse input string into a Document
  */
-export function parseInput(input: string): Document {
+function parseInput(input: string): Document {
   const { data: frontmatter, content } = matter(input);
   return { frontmatter, content };
+}
+
+/**
+ * Prepare a raw test case into an executable test case
+ */
+function prepareTestCase(raw: RawTestCase): TestCase | null {
+  if (!raw.input) return null;
+  
+  const document = parseInput(raw.input);
+  const resolver = createTestResolver(raw.files || {});
+  
+  return {
+    name: raw.name,
+    description: raw.description,
+    context: { document, resolver },
+    expectedOutput: raw.output ? parseInput(raw.output) : undefined,
+    expectedError: raw.error
+  };
 }
 
 /**
@@ -121,35 +131,36 @@ export function loadMarkdownTests(
 ) {
   const markdown = readFileSync(filePath, 'utf-8');
   
-  const testCases = parseTestCases(markdown);
-  const categories = groupTestsByCategory(markdown, testCases);
+  // Parse raw test cases
+  const rawTests = parseRawTestCases(markdown);
   
+  // Prepare test cases
+  const preparedTests: TestCase[] = [];
+  for (const raw of rawTests) {
+    const prepared = prepareTestCase(raw);
+    if (prepared) preparedTests.push(prepared);
+  }
+  
+  // Group by category based on H2 headers
+  const categories = new Map<string, TestCase[]>();
+  let currentCategory = 'General';
+  
+  for (const line of markdown.split('\n')) {
+    if (line.startsWith('## ')) {
+      currentCategory = line.slice(3).trim();
+      categories.set(currentCategory, []);
+    } else {
+      const test = preparedTests.find(t => line.includes(t.name));
+      if (test && !categories.get(currentCategory)?.includes(test)) {
+        categories.get(currentCategory)?.push(test);
+      }
+    }
+  }
+  
+  // Call back with each category
   categories.forEach((tests, category) => {
-    if (tests.length === 0) return;
-    // Filter out entries without input (non-test entries)
-    const validTests = tests.filter(t => t.input);
-    if (validTests.length > 0) {
-      callback(category, validTests);
+    if (tests.length > 0) {
+      callback(category, tests);
     }
   });
-}
-
-/**
- * Prepare a test case for execution
- */
-export function prepareTest(test: TestCase) {
-  const document = parseInput(test.input!);
-  const resolver = createTestResolver(test.files || {});
-  const context = { document, resolver };
-  
-  // Parse expected output as a Document
-  const expectedOutput = test.output 
-    ? parseInput(test.output)
-    : undefined;
-  
-  return { 
-    context, 
-    expectedOutput,
-    expectedError: test.error
-  };
 }
