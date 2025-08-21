@@ -4,10 +4,10 @@ import { processVars } from '../src/vars';
 import { documentsEqual } from '../src/types';
 import { loadMarkdownTests } from './utils/test-utils';
 
+const testFile = join(__dirname, '../specs/vars.tests.md');
+
 describe('Vars', () => {
-  loadMarkdownTests(
-    join(__dirname, '../specs/vars.tests.md'),
-    (category, tests) => {
+  loadMarkdownTests(testFile, (category, tests) => {
       describe(category, () => {
         tests.forEach(test => {
           it(test.name, async () => {
