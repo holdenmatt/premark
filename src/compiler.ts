@@ -69,6 +69,11 @@ async function compileWithFrontmatter(
     };
     
     // Insert content (replace {{ content }} or append)
+    const contentMatches = parent.content.match(/\{\{\s*content\s*\}\}/g);
+    if (contentMatches && contentMatches.length > 1) {
+      throw new Error(`Multiple {{ content }} markers found in parent. Only one content slot is allowed.`);
+    }
+    
     if (parent.content.includes('{{ content }}')) {
       compiledContent = parent.content.replace('{{ content }}', content);
     } else {
@@ -85,8 +90,9 @@ async function compileWithFrontmatter(
     const pattern = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
     
     if (typeof value === 'string' && value.startsWith('@')) {
-      // It's a document reference, resolve it
-      const docContent = await options.resolver(value);
+      // It's a document reference, resolve it (strip @ prefix)
+      const docPath = value.slice(1);
+      const docContent = await options.resolver(docPath);
       const { content: resolvedContent } = matter(docContent);
       compiledContent = compiledContent.replace(pattern, resolvedContent);
     } else {
@@ -111,7 +117,7 @@ async function compileWithFrontmatter(
     
     if (line === match[0]) {
       try {
-        const docContent = await options.resolver(match[0]);
+        const docContent = await options.resolver(path);
         const { content: resolvedContent } = matter(docContent);
         compiledContent = compiledContent.replace(match[0], resolvedContent);
       } catch (error) {
