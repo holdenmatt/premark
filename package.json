@@ -16,7 +16,8 @@
   "devDependencies": {
     "@types/node": "^24.3.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   },
   "exports": {
     ".": {
@@ -27,7 +28,9 @@
   "bin": {
     "premark": "./dist/cli.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "packageManager": "pnpm@10.11.0"
 }
