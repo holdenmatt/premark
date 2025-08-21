@@ -1,7 +1,7 @@
 import matter from 'gray-matter';
 import { Document, DocumentResolver, CompilationContext } from './types';
 import { processExtends } from './extends';
-import { processVariables } from './vars';
+import { processVars } from './vars';
 import { processTransclusions } from './transclusion';
 
 /**
@@ -34,7 +34,7 @@ export async function compile(source: string, options: CompileOptions): Promise<
   
   // Pipeline stages (order matters!)
   document = await processExtends({ ...context, document });
-  document = await processVariables({ ...context, document });
+  document = await processVars({ ...context, document });
   document = await processTransclusions({ ...context, document });
   
   // Format output

@@ -101,7 +101,7 @@ This is the header content.
 <input>
 ---
 vars:
-  header: "@header"
+  header: "@header.md"
 ---
 {{ header }}
 
