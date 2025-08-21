@@ -1,4 +1,5 @@
-import { DocumentResolver } from '../src/types';
+import matter from 'gray-matter';
+import { Document, DocumentResolver } from '../src/types';
 
 /**
  * Test case parsed from markdown
@@ -100,4 +101,41 @@ export function createTestResolver(files: Record<string, string>): DocumentResol
     }
     throw new Error(`Document not found: ${path}`);
   };
+}
+
+/**
+ * Format a document as markdown with optional frontmatter
+ */
+export function formatDocument(doc: Document): string {
+  return Object.keys(doc.frontmatter).length > 0
+    ? matter.stringify(doc.content, doc.frontmatter).trim()
+    : doc.content.trim();
+}
+
+/**
+ * Parse input string into a Document
+ */
+export function parseInput(input: string): Document {
+  const { data: frontmatter, content } = matter(input);
+  return { frontmatter, content };
+}
+
+/**
+ * Load and iterate through test cases from a markdown file
+ */
+export function forEachTest(
+  markdown: string,
+  callback: (category: string, tests: TestCase[]) => void
+) {
+  const testCases = parseTestCases(markdown);
+  const categories = groupTestsByCategory(markdown, testCases);
+  
+  categories.forEach((tests, category) => {
+    if (tests.length === 0) return;
+    // Filter out entries without input (non-test entries)
+    const validTests = tests.filter(t => t.input);
+    if (validTests.length > 0) {
+      callback(category, validTests);
+    }
+  });
 }
