@@ -1,5 +1,5 @@
 {
-  "name": "premark",
+  "name": "@holdenmatt/premark",
   "version": "0.0.1",
   "description": "A markdown preprocessor for composable instructions",
   "author": "Matt Holden",

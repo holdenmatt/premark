@@ -20,7 +20,7 @@ cat input.md | premark > output.md
 ## Install
 
 ```bash
-npm install -g premark
+npm install -g @holdenmatt/premark
 ```
 
 ## Example
