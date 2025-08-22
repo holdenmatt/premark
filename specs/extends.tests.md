@@ -1,5 +1,6 @@
 # Extends Test Cases
 
+```
 ## Core Features
 
 ### Basic Inheritance
@@ -460,3 +461,4 @@ Content
 </input>
 
 <error>Circular reference detected: self.md</error>
+```

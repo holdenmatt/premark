@@ -1,6 +1,6 @@
 # premark
 
-A minimal markdown preprocessor for composable instructions.
+A markdown preprocessor for composable instructions.
 
 ## What it does
 
@@ -79,14 +79,11 @@ premark/
 │   ├── cli.ts          # CLI entry point
 │   ├── compiler.ts     # Main compilation logic
 │   ├── extends.ts      # Extends implementation
-│   ├── transclusion.ts # Transclusion implementation
 │   ├── vars.ts         # Variable substitution
+│   ├── transclusion.ts # Transclusion implementation
 │   ├── resolver.ts     # Document path resolution
 │   └── types.ts        # TypeScript types
 ├── specs/              # Feature specs & test cases
-│   ├── extends.spec.md
-│   ├── transclusion.spec.md
-│   └── vars.spec.md
 ├── tests/              # Vitest test suite
 ├── dist/               # Built output
 ├── tsup.config.ts      # Build configuration

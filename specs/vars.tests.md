@@ -1,5 +1,6 @@
 # Vars Test Cases
 
+```
 ## Core Features
 
 ### Basic Substitution
@@ -188,3 +189,4 @@ vars:
 </input>
 
 <error>Undefined variable: y</error>
+```

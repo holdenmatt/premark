@@ -1,5 +1,6 @@
 # Transclusion Test Cases
 
+```
 ## Core Features
 
 ### Basic Transclusion
@@ -242,3 +243,4 @@ Detect circular references.
 </input>
 
 <error>Circular reference detected: a.md</error>
+```
