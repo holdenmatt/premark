@@ -3,7 +3,13 @@
   "version": "0.0.1",
   "description": "A markdown preprocessor for composable instructions",
   "author": "Matt Holden",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/holdenmatt/premark"
+  },
+  "homepage": "https://github.com/holdenmatt/premark",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -33,6 +39,5 @@
   "files": [
     "dist"
   ],
-  "license": "MIT",
   "packageManager": "pnpm@10.11.0"
 }

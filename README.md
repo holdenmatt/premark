@@ -99,10 +99,10 @@ For detailed specs and test cases:
 
 ## Prior Art
 
-- Jekyll's template inheritance with `layout` and `{{ content }}`
-- CSS cascade model for variable inheritance
 - Ted Nelson's transclusion concept (1965) - including content by reference
-- Knuth's literate programming - weaving documents from components
+- Knuth's literate programming (1984) - weaving documents from components
+- Jekyll's template inheritance (2008) with `layout` and `{{ content }}`
+- CSS cascade model for variable inheritance
 - Long history of preprocessors: cpp for C, Sass/LESS for CSS, and now premark for markdown
 
 ## License
