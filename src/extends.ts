@@ -29,7 +29,7 @@ export async function processExtends(
   
   // Check for circular extends
   if (_visited.has(parentPath)) {
-    throw new Error(`Circular extends detected: ${parentPath}`);
+    throw new Error(`Circular reference detected: ${parentPath}`);
   }
   
   // Load and parse parent
@@ -56,7 +56,7 @@ export async function processExtends(
   if (mergedContent.includes('{{ content }}')) {
     mergedContent = mergedContent.replace('{{ content }}', document.content);
   } else {
-    mergedContent = mergedContent + '\n\n' + document.content;
+    mergedContent = processedParent.content + '\n\n' + document.content;
   }
   
   // Merge frontmatter (child overrides parent, but remove extends)

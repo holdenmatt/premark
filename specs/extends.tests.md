@@ -26,6 +26,7 @@ title: Base Document
 author: Alice
 ---
 Base content here.
+
 Child content here.
 </output>
 
@@ -61,6 +62,7 @@ vars:
   status: active
 ---
 Hello {{ name }}!
+
 You are {{ age }} years old.
 </output>
 
@@ -97,6 +99,7 @@ vars:
   name: Child
 ---
 Content
+
 </output>
 
 ### Frontmatter Override
@@ -174,11 +177,45 @@ vars:
   d: 400
 ---
 Grandparent content.
+
 Parent content.
+
 Child content.
 </output>
 
 ## Content Handling
+
+### Content Placeholder
+
+Parent with {{ content }} marker for child insertion.
+
+<file name="layout.md">
+---
+title: Layout
+---
+Header section
+
+{{ content }}
+
+Footer section</file>
+
+<input>
+---
+extends: layout.md
+---
+Main content here
+</input>
+
+<output>
+---
+title: Layout
+---
+Header section
+
+Main content here
+
+Footer section
+</output>
 
 ### Empty Parent Content
 
@@ -204,6 +241,7 @@ vars:
   theme: dark
   lang: en
 ---
+
 My content.
 </output>
 
@@ -229,6 +267,7 @@ title: Base
 author: Jane
 ---
 Base content only.
+
 </output>
 
 ### Both Empty Content
@@ -280,6 +319,7 @@ vars:
   name: Test
 ---
 Content
+
 Hello {{ name }}
 </output>
 
@@ -307,6 +347,7 @@ vars:
   name: Test
 ---
 Hello {{ name }}
+
 More content
 </output>
 
@@ -332,6 +373,7 @@ Instance content
 template: true
 ---
 Template content
+
 Instance content
 </output>
 
@@ -374,6 +416,29 @@ C content
 </input>
 
 <error>Circular reference detected: a.md</error>
+
+### Multiple Content Markers Error
+
+Parent with multiple {{ content }} markers.
+
+<file name="bad-layout.md">
+---
+title: Bad Layout
+---
+Header
+{{ content }}
+Middle
+{{ content }}
+Footer</file>
+
+<input>
+---
+extends: bad-layout.md
+---
+Content
+</input>
+
+<error>Multiple {{ content }} markers found</error>
 
 ### Self Reference Error
 

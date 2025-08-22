@@ -6,7 +6,10 @@ Implements document inheritance through the `extends` field in frontmatter, allo
 
 1. **Parent resolution**: The `extends` field specifies a parent document path to inherit from
 
-2. **Content inheritance**: Child content is appended to parent content (parent first, then child)
+2. **Content inheritance**: Child content is merged with parent content
+   - If parent has a `{{ content }}` marker: child content replaces the marker exactly
+   - If parent has no `{{ content }}` marker: child content is appended with `\n\n` separator
+   - Multiple `{{ content }}` markers cause an error
 
 3. **Variable cascading**: `vars` field is merged at the top level with child overrides winning
    - Top-level vars keys are merged, but values are replaced entirely (no deep merge of nested objects)
