@@ -2,6 +2,8 @@
 
 Replaces `@reference` patterns in content with the content of referenced documents.
 
+> [Test cases](transclusion.tests.md)
+
 *Note: `@references` in variable values are handled by the vars module, not transclusion. This allows variables to inject `@references` into content that will then be transcluded.*
 
 ## Rules

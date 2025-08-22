@@ -2,6 +2,8 @@
 
 Substitutes `{{ variable }}` placeholders with values defined in the frontmatter `vars` field.
 
+> [Test cases](vars.tests.md)
+
 ## Rules
 
 *Note: Variable inheritance/cascading through `extends` is covered in the Extends spec.*

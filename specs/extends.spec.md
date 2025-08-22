@@ -2,6 +2,8 @@
 
 Implements document inheritance through the `extends` field in frontmatter, allowing child documents to inherit and override content and variables from parent documents.
 
+> [Test cases](extends.tests.md)
+
 ## Rules
 
 1. **Parent resolution**: The `extends` field specifies a parent document path to inherit from

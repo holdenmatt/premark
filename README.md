@@ -23,33 +23,43 @@ cat input.md | premark > output.md
 npm install -g premark
 ```
 
-## Features
+## Example
 
-**[Extends](https://github.com/holdenmatt/premark/blob/main/specs/extends.spec.md)** - Inherit from parent documents:
-```markdown
----
-extends: @base-spec.md
----
-Your content here
-```
-
-**[Vars](https://github.com/holdenmatt/premark/blob/main/specs/vars.spec.md)** - Define and substitute values:
+Base template (`assistant.md`):
 ```markdown
 ---
 vars:
-  model: claude-3-5-sonnet
-  tone: friendly
+  tone: helpful
 ---
-You are a {{ tone }} assistant using {{ model }}.
+You are a {{ tone }} assistant.
+
+{{ content }}
 ```
 
-**[Transclusion](https://github.com/holdenmatt/premark/blob/main/specs/transclusion.spec.md)** - Include other documents:
+Specialized assistant (`code-reviewer.md`):
 ```markdown
-Use this context:
-@context-doc.md
+---
+extends: @assistant.md
+vars:
+  tone: constructive
+---
+Review this PR for bugs and style issues.
 
-Generate output using:
-@templates/code-review.md
+@guidelines.md
+```
+
+Shared context (`guidelines.md`):
+```markdown
+Follow team conventions and best practices.
+```
+
+Running `premark code-reviewer.md` outputs:
+```markdown
+You are a constructive assistant.
+
+Review this PR for bugs and style issues.
+
+Follow team conventions and best practices.
 ```
 
 ## How it works
@@ -82,6 +92,13 @@ premark/
 ├── tsup.config.ts      # Build configuration
 └── package.json
 ```
+
+## Specs
+
+For detailed specs and test cases:
+- [Vars](https://github.com/holdenmatt/premark/blob/main/specs/vars.spec.md)
+- [Transclusion](https://github.com/holdenmatt/premark/blob/main/specs/transclusion.spec.md)
+- [Extends](https://github.com/holdenmatt/premark/blob/main/specs/extends.spec.md)
 
 ## License
 
