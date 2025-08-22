@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { compile, createFileResolver } from './index';
-import type { DocumentResolver } from './types';
+import { compile, createFileResolver, type DocumentResolver } from './index';
 import { readFile } from 'fs/promises';
 import { resolve, dirname } from 'path';
 import { version } from '../package.json';
