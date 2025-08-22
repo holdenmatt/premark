@@ -24,7 +24,7 @@ export async function processVars(
   // First, find all placeholders in the content
   const placeholderPattern = /\{\{\s*([a-zA-Z0-9_-]+)\s*\}\}/g;
   const placeholders = new Set<string>();
-  let match;
+  let match: RegExpExecArray | null;
   while ((match = placeholderPattern.exec(document.content)) !== null) {
     placeholders.add(match[1]);
   }

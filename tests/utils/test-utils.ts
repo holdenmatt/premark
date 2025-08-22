@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import {
   type Document,
   type DocumentResolver,
@@ -68,8 +68,9 @@ function parseTestCases(markdown: string): TestCase[] {
       !(
         restoredSection.includes('<input>') || restoredSection.includes('<file')
       )
-    )
+    ) {
       continue;
+    }
 
     // Extract raw test data
     const files: Record<string, string> = {};
@@ -85,7 +86,9 @@ function parseTestCases(markdown: string): TestCase[] {
     const errorMatch = restoredSection.match(/<error>([\s\S]*?)<\/error>/);
 
     // Skip if no input
-    if (!inputMatch) continue;
+    if (!inputMatch) {
+      continue;
+    }
 
     // Parse input and output as Documents
     const inputDoc = parseDocument(inputMatch[1].trim());
@@ -119,9 +122,10 @@ function groupByCategory(
   const categories = new Map<string, TestCase[]>();
   let currentCategory = 'General';
 
+  const HEADING_PREFIX = '## ';
   for (const line of markdown.split('\n')) {
-    if (line.startsWith('## ')) {
-      currentCategory = line.slice(3).trim();
+    if (line.startsWith(HEADING_PREFIX)) {
+      currentCategory = line.slice(HEADING_PREFIX.length).trim();
       categories.set(currentCategory, []);
     } else {
       const test = testCases.find((t) => line.includes(t.name));
@@ -143,6 +147,7 @@ function groupByCategory(
  * Create a resolver function for mock files
  */
 function createResolver(files: Record<string, string>): DocumentResolver {
+  // biome-ignore lint/suspicious/useAwait: mock resolver needs to match async interface
   return async (path: string): Promise<string> => {
     if (path in files) {
       return files[path];

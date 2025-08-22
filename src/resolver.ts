@@ -1,5 +1,5 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import type { DocumentResolver } from './types';
 
 /**
@@ -16,7 +16,7 @@ export function createFileResolver(
 
     try {
       return await readFile(fullPath, 'utf-8');
-    } catch (error) {
+    } catch (_error) {
       throw new Error(`Could not read file: ${path}`);
     }
   };

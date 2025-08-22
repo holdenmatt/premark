@@ -1,8 +1,8 @@
-import { execFile } from 'child_process';
-import { mkdir, rm, writeFile } from 'fs/promises';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { promisify } from 'util';
+import { execFile } from 'node:child_process';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { promisify } from 'node:util';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 const exec = promisify(execFile);
@@ -111,9 +111,10 @@ vars:
     try {
       await exec('node', [CLI_PATH, nonExistentFile]);
       expect.fail('Should have thrown an error');
-    } catch (error: any) {
-      expect(error.stderr).toContain('Error:');
-      expect(error.code).toBe(1);
+    } catch (error: unknown) {
+      const execError = error as { stderr: string; code: number };
+      expect(execError.stderr).toContain('Error:');
+      expect(execError.code).toBe(1);
     }
   });
 });

@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { processTransclusions } from '../src/transclusion';
 import { documentsEqual } from '../src/types';

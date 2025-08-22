@@ -1,6 +1,21 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-  "extends": [
-    "ultracite"
-  ]
+  "extends": ["ultracite"],
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noForEach": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off",
+        "useTopLevelRegex": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noAssignInExpressions": "off"
+      }
+    }
+  }
 }

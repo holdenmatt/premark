@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { documentsEqual } from '../src/types';
 import { processVars } from '../src/vars';

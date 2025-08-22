@@ -8,6 +8,7 @@ import matter from 'gray-matter';
  * A document with parsed frontmatter and content
  */
 export type Document = {
+  // biome-ignore lint/suspicious/noExplicitAny:.
   frontmatter: Record<string, any>;
   content: string;
 };
@@ -38,16 +39,22 @@ export function parseDocument(text: string): Document {
  */
 export function documentsEqual(a: Document, b: Document): boolean {
   // Compare content
-  if (a.content !== b.content) return false;
+  if (a.content !== b.content) {
+    return false;
+  }
 
   // Compare frontmatter keys
   const aKeys = Object.keys(a.frontmatter).sort();
   const bKeys = Object.keys(b.frontmatter).sort();
-  if (aKeys.length !== bKeys.length) return false;
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  }
 
   // Compare frontmatter values
   for (const key of aKeys) {
-    if (!bKeys.includes(key)) return false;
+    if (!bKeys.includes(key)) {
+      return false;
+    }
     if (
       JSON.stringify(a.frontmatter[key]) !== JSON.stringify(b.frontmatter[key])
     ) {

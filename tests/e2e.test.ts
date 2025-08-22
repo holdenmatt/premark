@@ -1,5 +1,5 @@
+import { join } from 'node:path';
 import matter from 'gray-matter';
-import { join } from 'path';
 import { describe, expect, it } from 'vitest';
 import { compile } from '../src/compiler';
 import { loadMarkdownTests } from './utils/test-utils';

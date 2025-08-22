@@ -56,7 +56,7 @@ export async function processExtends(
     mergedContent = mergedContent.replace('{{ content }}', document.content);
   } else if (processedParent.content && document.content) {
     // Both have content - join with separator
-    mergedContent = processedParent.content + '\n\n' + document.content;
+    mergedContent = `${processedParent.content}\n\n${document.content}`;
   } else {
     // At least one is empty - just concatenate
     mergedContent = processedParent.content + document.content;

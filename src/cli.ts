@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+import { readFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
 import { Command } from 'commander';
-import { readFile } from 'fs/promises';
-import { dirname, resolve } from 'path';
 import { version } from '../package.json';
 import { compile, createFileResolver, type DocumentResolver } from './index';
 
@@ -38,7 +38,9 @@ program
       const result = await compile(source, { resolver });
       process.stdout.write(result);
     } catch (error) {
-      console.error(`Error: ${error instanceof Error ? error.message : error}`);
+      process.stderr.write(
+        `Error: ${error instanceof Error ? error.message : error}\n`
+      );
       process.exit(1);
     }
   });
