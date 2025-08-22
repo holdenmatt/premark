@@ -78,6 +78,33 @@ Follow team conventions and best practices.
 4. **Substitute** variables and @ references
 5. **Output** compiled markdown
 
+## Frontmatter
+
+By default, all frontmatter is stripped from the compiled output. This lets you use frontmatter for documentation, metadata, or versioning without polluting the final markdown.
+
+To include specific values in the output, place them under the `output:` key:
+
+```
+---
+name: My spec   # stripped
+version: 1.0.2  # stripped
+output:         # preserved in output
+  temperature: 0.7
+---
+
+Content here...
+```
+
+Compiles to:
+
+```markdown
+---
+temperature: 0.7
+---
+
+Content here...
+```
+
 ## Project Structure
 
 ```

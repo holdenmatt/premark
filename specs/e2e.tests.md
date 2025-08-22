@@ -137,24 +137,65 @@ World
 </output>
 ```
 
-### Non-Processing Frontmatter
+### Selective Output with output key
 
-Frontmatter without extends/vars passes through.
+Only frontmatter under the output key is preserved in the final output.
 
 ```
 <input>
 ---
-model: claude
-temperature: 0.7
+name: My Spec
+version: 1.0.0
+description: A test document
+output:
+  model: sonnet
+  temperature: 0.7
 ---
 # Hello
 </input>
 
 <output>
 ---
-model: claude
+model: sonnet
 temperature: 0.7
 ---
 # Hello
+</output>
+```
+
+### Output key with extends
+
+Output key is inherited and can be overridden in child documents.
+
+```
+<file name="base.md">
+---
+vars:
+  title: Base
+output:
+  model: gpt4
+  temperature: 0.5
+---
+# {{ title }}
+</file>
+
+<input>
+---
+extends: base.md
+vars:
+  title: Child
+output:
+  temperature: 0.9
+---
+Child content
+</input>
+
+<output>
+---
+temperature: 0.9
+---
+# Child
+
+Child content
 </output>
 ```
