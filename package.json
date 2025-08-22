@@ -1,6 +1,6 @@
 {
   "name": "@holdenmatt/premark",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A markdown preprocessor for composable instructions",
   "author": "Matt Holden",
   "license": "MIT",
