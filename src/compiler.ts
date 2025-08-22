@@ -38,5 +38,5 @@ export async function compile(source: string, options: CompileOptions): Promise<
   if (Object.keys(document.frontmatter).length > 0) {
     return matter.stringify(document.content, document.frontmatter);
   }
-  return document.content.trim();
+  return document.content;
 }

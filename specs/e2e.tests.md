@@ -1,0 +1,150 @@
+# End-to-End Test Cases
+
+## Integration
+
+### All Modules Together
+
+Extends + vars + transclusion working in correct order.
+
+<file name="base.md">
+---
+vars:
+  title: Base Title
+  author: Original Author
+---
+# {{ title }}
+
+Base content with a reference:
+@shared.md</file>
+
+<file name="shared.md">Shared content block</file>
+
+<input>
+---
+extends: base.md
+vars:
+  title: Child Title
+---
+Child content by {{ author }}
+</input>
+
+<output>
+# Child Title
+
+Base content with a reference:
+Shared content block
+
+Child content by Original Author
+</output>
+
+### Content Slot With All Features
+
+Layout with {{ content }} marker, vars, and transclusion.
+
+<file name="layout.md">
+---
+vars:
+  header: "Site Header"
+---
+{{ header }}
+
+{{ content }}
+@footer.md</file>
+
+<file name="footer.md">© 2024 Footer</file>
+
+<input>
+---
+extends: layout.md
+---
+Page content here
+</input>
+
+<output>
+Site Header
+
+Page content here
+
+© 2024 Footer
+</output>
+
+### Three Level Cascade
+
+Variables cascade through grandparent → parent → child with transclusion.
+
+<file name="grandparent.md">
+---
+vars:
+  a: 1
+  b: 2
+  c: 3
+---
+GP: a={{ a }}, b={{ b }}, c={{ c }}</file>
+
+<file name="parent.md">
+---
+extends: grandparent.md
+vars:
+  b: 20
+  d: 40
+---
+P: b={{ b }}, d={{ d }}
+@snippet.md</file>
+
+<file name="snippet.md">Snippet content</file>
+
+<input>
+---
+extends: parent.md
+vars:
+  c: 300
+---
+C: a={{ a }}, b={{ b }}, c={{ c }}, d={{ d }}
+</input>
+
+<output>
+GP: a=1, b=20, c=300
+
+P: b=20, d=40
+Snippet content
+
+C: a=1, b=20, c=300, d=40
+</output>
+
+## Pass Through
+
+### No Processing
+
+Plain markdown with no frontmatter passes through unchanged.
+
+<input>
+# Hello
+
+World
+</input>
+
+<output>
+# Hello
+
+World
+</output>
+
+### Non-Processing Frontmatter
+
+Frontmatter without extends/vars passes through.
+
+<input>
+---
+model: claude
+temperature: 0.7
+---
+# Hello
+</input>
+
+<output>
+---
+model: claude
+temperature: 0.7
+---
+# Hello
+</output>
