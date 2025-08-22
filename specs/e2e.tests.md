@@ -6,6 +6,7 @@
 
 Extends + vars + transclusion working in correct order.
 
+```
 <file name="base.md">
 ---
 vars:
@@ -36,11 +37,13 @@ Shared content block
 
 Child content by Original Author
 </output>
+```
 
 ### Content Slot With All Features
 
 Layout with {{ content }} marker, vars, and transclusion.
 
+```
 <file name="layout.md">
 ---
 vars:
@@ -67,11 +70,13 @@ Page content here
 
 © 2024 Footer
 </output>
+```
 
 ### Three Level Cascade
 
 Variables cascade through grandparent → parent → child with transclusion.
 
+```
 <file name="grandparent.md">
 ---
 vars:
@@ -110,6 +115,7 @@ Snippet content
 
 C: a=1, b=20, c=300, d=40
 </output>
+```
 
 ## Pass Through
 
@@ -117,6 +123,7 @@ C: a=1, b=20, c=300, d=40
 
 Plain markdown with no frontmatter passes through unchanged.
 
+```
 <input>
 # Hello
 
@@ -128,11 +135,13 @@ World
 
 World
 </output>
+```
 
 ### Non-Processing Frontmatter
 
 Frontmatter without extends/vars passes through.
 
+```
 <input>
 ---
 model: claude
@@ -148,3 +157,4 @@ temperature: 0.7
 ---
 # Hello
 </output>
+```

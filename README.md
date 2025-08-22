@@ -97,6 +97,14 @@ For detailed specs and test cases:
 - [Transclusion](https://github.com/holdenmatt/premark/blob/main/specs/transclusion.spec.md)
 - [Extends](https://github.com/holdenmatt/premark/blob/main/specs/extends.spec.md)
 
+## Prior Art
+
+- Jekyll's template inheritance with `layout` and `{{ content }}`
+- CSS cascade model for variable inheritance
+- Ted Nelson's transclusion concept (1965) - including content by reference
+- Knuth's literate programming - weaving documents from components
+- Long history of preprocessors: cpp for C, Sass/LESS for CSS, and now premark for markdown
+
 ## License
 
 MIT
