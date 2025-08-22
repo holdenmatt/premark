@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { compile, createFileResolver, type DocumentResolver } from './index';
 import { readFile } from 'fs/promises';
-import { resolve, dirname } from 'path';
+import { dirname, resolve } from 'path';
 import { version } from '../package.json';
+import { compile, createFileResolver, type DocumentResolver } from './index';
 
 const program = new Command();
 
@@ -17,7 +17,7 @@ program
     try {
       let source: string;
       let resolver: DocumentResolver;
-      
+
       if (input) {
         // Read from file
         const inputPath = resolve(input);
@@ -29,12 +29,12 @@ program
           program.outputHelp();
           process.exit(0);
         }
-        
+
         source = await readFromStdin();
         // Use current directory as base for resolving references from stdin
         resolver = createFileResolver(process.cwd());
       }
-      
+
       const result = await compile(source, { resolver });
       process.stdout.write(result);
     } catch (error) {

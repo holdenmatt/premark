@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { execFile } from 'child_process';
-import { promisify } from 'util';
-import { writeFile, rm, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { mkdir, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
+import { join } from 'path';
+import { promisify } from 'util';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 const exec = promisify(execFile);
 
@@ -29,11 +29,11 @@ vars:
   name: World
 ---
 Hello {{ name }}!`;
-    
+
     await writeFile(inputPath, content);
-    
+
     const { stdout } = await exec('node', [CLI_PATH, inputPath]);
-    
+
     expect(stdout).toBe('Hello World!');
   });
 
@@ -43,49 +43,54 @@ vars:
   greeting: Hi
 ---
 {{ greeting }} from stdin!`;
-    
+
     const child = execFile('node', [CLI_PATH], (error, stdout) => {
       expect(error).toBeNull();
       expect(stdout).toContain('Hi from stdin!');
     });
-    
+
     child.stdin?.write(content);
     child.stdin?.end();
-    
-    await new Promise(resolve => child.on('exit', resolve));
+
+    await new Promise((resolve) => child.on('exit', resolve));
   });
 
   it('resolves transclusions relative to file directory', async () => {
     const baseFile = join(tempDir, 'base.md');
     const mainFile = join(tempDir, 'main.md');
-    
+
     await writeFile(baseFile, '# Base content');
     await writeFile(mainFile, '@base.md\n\nMore content');
-    
+
     const { stdout } = await exec('node', [CLI_PATH, mainFile]);
-    
+
     expect(stdout).toContain('# Base content');
     expect(stdout).toContain('More content');
   });
 
   it('resolves transclusions relative to cwd when reading from stdin', async () => {
     const baseFile = join(process.cwd(), 'base-stdin-test.md');
-    
+
     try {
       await writeFile(baseFile, '# Content from file');
-      
+
       const content = '@base-stdin-test.md\n\nFrom stdin';
-      
-      const child = execFile('node', [CLI_PATH], { cwd: process.cwd() }, (error, stdout) => {
-        expect(error).toBeNull();
-        expect(stdout).toContain('# Content from file');
-        expect(stdout).toContain('From stdin');
-      });
-      
+
+      const child = execFile(
+        'node',
+        [CLI_PATH],
+        { cwd: process.cwd() },
+        (error, stdout) => {
+          expect(error).toBeNull();
+          expect(stdout).toContain('# Content from file');
+          expect(stdout).toContain('From stdin');
+        }
+      );
+
       child.stdin?.write(content);
       child.stdin?.end();
-      
-      await new Promise(resolve => child.on('exit', resolve));
+
+      await new Promise((resolve) => child.on('exit', resolve));
     } finally {
       await rm(baseFile, { force: true });
     }
@@ -95,14 +100,14 @@ vars:
     // This test would need to mock process.stdin.isTTY
     // For now, we can test that --help works
     const { stdout } = await exec('node', [CLI_PATH, '--help']);
-    
+
     expect(stdout).toContain('premark');
     expect(stdout).toContain('Input file path (reads from stdin if omitted)');
   });
 
   it('handles errors gracefully', async () => {
     const nonExistentFile = join(tempDir, 'does-not-exist.md');
-    
+
     try {
       await exec('node', [CLI_PATH, nonExistentFile]);
       expect.fail('Should have thrown an error');
