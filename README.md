@@ -7,11 +7,13 @@ A markdown preprocessor for composable instructions.
 Premark is a markdown-to-markdown preprocessor that enables composable, reusable instructions for LLM tools like Claude Code, Cursor, and other AI coding assistants.
 
 It adds three features to markdown:
+
 - **Vars** - Replace `{{ variable }}` placeholders with values from frontmatter
 - **Transclusion** - Include content from other files using `@path/to/filename.md` syntax
 - **Extends** - Extend parent docs and override their vars
 
 It reads standard markdown (of any flavor), processes it, and outputs markdown:
+
 ```bash
 premark input.md > output.md
 cat input.md | premark > output.md
@@ -26,34 +28,40 @@ npm install -g @holdenmatt/premark
 ## Example
 
 Base template (`assistant.md`):
+
 ```markdown
 ---
 vars:
   tone: helpful
 ---
+
 You are a {{ tone }} assistant.
 
 {{ content }}
 ```
 
 Specialized assistant (`code-reviewer.md`):
+
 ```markdown
 ---
 extends: @assistant.md
 vars:
   tone: constructive
 ---
+
 Review this PR for bugs and style issues.
 
 @guidelines.md
 ```
 
 Shared context (`guidelines.md`):
+
 ```markdown
 Follow team conventions and best practices.
 ```
 
 Running `premark code-reviewer.md` outputs:
+
 ```markdown
 You are a constructive assistant.
 
@@ -65,7 +73,7 @@ Follow team conventions and best practices.
 ## How it works
 
 1. **Parse** frontmatter
-2. **Resolve** parent documents recursively  
+2. **Resolve** parent documents recursively
 3. **Cascade** variables (child overrides parent)
 4. **Substitute** variables and @ references
 5. **Output** compiled markdown
@@ -93,6 +101,7 @@ premark/
 ## Specs
 
 For detailed specs and test cases:
+
 - [Vars](https://github.com/holdenmatt/premark/blob/main/specs/vars.spec.md)
 - [Transclusion](https://github.com/holdenmatt/premark/blob/main/specs/transclusion.spec.md)
 - [Extends](https://github.com/holdenmatt/premark/blob/main/specs/extends.spec.md)
@@ -101,7 +110,7 @@ For detailed specs and test cases:
 
 - Ted Nelson's transclusion concept (1965) - including content by reference
 - Knuth's literate programming (1984) - weaving documents from components
-- Jekyll's template inheritance (2008) with `layout` and `{{ content }}`
+- Jekyll's template inheritance with `layout` and `{{ content }}`
 - CSS cascade model for variable inheritance
 - Long history of preprocessors: cpp for C, Sass/LESS for CSS, and now premark for markdown
 
