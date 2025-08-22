@@ -17,3 +17,4 @@ npm-debug.log*
 .env.local
 
 TODO.md
+.claude/CLAUDE.md
