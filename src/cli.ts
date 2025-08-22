@@ -11,11 +11,7 @@ const program = new Command();
 program
   .name('premark')
   .description('A minimal markdown preprocessor for composable instructions')
-  .version(version);
-
-program
-  .command('compile')
-  .description('Compile a premark file to markdown')
+  .version(version)
   .argument('<input>', 'Input file path')
   .option('-o, --output <path>', 'Output file path (defaults to stdout)')
   .action(async (input: string, options: { output?: string }) => {
