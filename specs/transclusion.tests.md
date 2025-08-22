@@ -1,12 +1,12 @@
 # Transclusion Test Cases
 
-```
 ## Core Features
 
 ### Basic Transclusion
 
 Simple document reference.
 
+```
 <file name="header.md">
 # Welcome
 This is the header content.</file>
@@ -23,11 +23,13 @@ This is the header content.
 
 Main content here.
 </output>
+```
 
 ### Multiple Transclusions
 
 Multiple references in one document.
 
+```
 <file name="header.md">
 Header content</file>
 
@@ -49,11 +51,13 @@ Main content
 
 Footer content
 </output>
+```
 
 ### Path with Subdirectory
 
 Reference to file in subdirectory.
 
+```
 <file name="components/header.md">
 Component header</file>
 
@@ -64,6 +68,7 @@ Component header</file>
 <output>
 Component header
 </output>
+```
 
 ## Indentation
 
@@ -71,6 +76,7 @@ Component header
 
 Indentation before @ is applied to each line of transcluded content.
 
+```
 <file name="list.md">
 - Item 1
 - Item 2
@@ -87,11 +93,13 @@ My list:
   - Item 2
   - Item 3
 </output>
+```
 
 ### Multi-line Indentation
 
 Each line preserves the indentation.
 
+````
 <file name="code.md">
 ```js
 function hello() {
@@ -114,6 +122,7 @@ Example:
     ```
 End
 </output>
+````
 
 ## Recursive Transclusion
 
@@ -121,6 +130,7 @@ End
 
 Referenced document contains its own references.
 
+```
 <file name="inner.md">
 Inner content</file>
 
@@ -138,6 +148,7 @@ Outer start
 Inner content
 Outer end
 </output>
+```
 
 ## Edge Cases
 
@@ -145,6 +156,7 @@ Outer end
 
 Only content is transcluded, not frontmatter.
 
+```
 <file name="doc.md">
 ---
 title: Document
@@ -159,11 +171,13 @@ Document content only</file>
 <output>
 Document content only
 </output>
+```
 
 ### Empty Document
 
 Transcluding empty document.
 
+```
 <file name="empty.md"></file>
 
 <input>
@@ -177,11 +191,13 @@ Before
 
 After
 </output>
+```
 
 ### Inline @ Not Transcluded
 
 @ in middle of line is not a reference.
 
+```
 <input>
 Email me @ john@example.com
 Contact @alice for details
@@ -191,11 +207,13 @@ Contact @alice for details
 Email me @ john@example.com
 Contact @alice for details
 </output>
+```
 
 ### @ With Space After
 
 Space between @ and path means no transclusion.
 
+```
 <input>
 @ header.md
 </input>
@@ -203,11 +221,13 @@ Space between @ and path means no transclusion.
 <output>
 @ header.md
 </output>
+```
 
 ### @ At End of Line
 
 @ with no path is not transcluded.
 
+```
 <input>
 This line ends with @
 </input>
@@ -215,6 +235,7 @@ This line ends with @
 <output>
 This line ends with @
 </output>
+```
 
 ## Error Cases
 
@@ -222,16 +243,19 @@ This line ends with @
 
 Error when referenced document doesn't exist.
 
+```
 <input>
 @nonexistent.md
 </input>
 
 <error>Document not found: nonexistent.md</error>
+```
 
 ### Circular Reference Error
 
 Detect circular references.
 
+```
 <file name="a.md">
 @b.md</file>
 

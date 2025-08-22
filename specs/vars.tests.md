@@ -1,12 +1,12 @@
 # Vars Test Cases
 
-```
 ## Core Features
 
 ### Basic Substitution
 
 Simple variable substitution.
 
+```
 <input>
 ---
 vars:
@@ -19,11 +19,13 @@ Hello {{ name }}, you are {{ age }} years old.
 <output>
 Hello Alice, you are 30 years old.
 </output>
+```
 
 ### Whitespace Handling
 
 Spaces inside braces are normalized.
 
+```
 <input>
 ---
 vars:
@@ -35,11 +37,13 @@ vars:
 <output>
 test test test
 </output>
+```
 
 ### Variable Name Formats
 
 Various valid variable name formats.
 
+```
 <input>
 ---
 vars:
@@ -54,11 +58,13 @@ vars:
 <output>
 hyphenated underscore uppercase mixed
 </output>
+```
 
 ### Type Coercion
 
 Non-string values are converted to strings.
 
+```
 <input>
 ---
 vars:
@@ -83,6 +89,7 @@ Items: [1,2,3]
 Config: {"key":"value"}
 Nothing: null
 </output>
+```
 
 ## Document References
 
@@ -90,6 +97,7 @@ Nothing: null
 
 Variables with @ prefix resolve to document content, excluding frontmatter.
 
+```
 <file name="header.md">
 ---
 title: Header Document
@@ -115,6 +123,7 @@ This is the header content.
 
 Main content here.
 </output>
+```
 
 ## Edge Cases
 
@@ -122,6 +131,7 @@ Main content here.
 
 Documents without vars field pass through unchanged.
 
+```
 <input>
 ---
 title: My Document
@@ -137,11 +147,13 @@ author: John
 ---
 No processing happens without vars.
 </output>
+```
 
 ### Empty Variables
 
 Empty vars object is removed from output.
 
+```
 <input>
 ---
 vars: {}
@@ -156,11 +168,13 @@ title: Test
 ---
 Content
 </output>
+```
 
 ### Nested Placeholders
 
 Placeholders inside variable values are not processed.
 
+```
 <input>
 ---
 vars:
@@ -173,6 +187,7 @@ Result: {{ a }}
 <output>
 Result: {{ b }}
 </output>
+```
 
 ## Error Cases
 
@@ -180,6 +195,7 @@ Result: {{ b }}
 
 Error when placeholder has no corresponding variable.
 
+```
 <input>
 ---
 vars:
