@@ -55,8 +55,12 @@ export async function processExtends(
   let mergedContent = processedParent.content;
   if (mergedContent.includes('{{ content }}')) {
     mergedContent = mergedContent.replace('{{ content }}', document.content);
-  } else {
+  } else if (processedParent.content && document.content) {
+    // Both have content - join with separator
     mergedContent = processedParent.content + '\n\n' + document.content;
+  } else {
+    // At least one is empty - just concatenate
+    mergedContent = processedParent.content + document.content;
   }
   
   // Merge frontmatter (child overrides parent, but remove extends)

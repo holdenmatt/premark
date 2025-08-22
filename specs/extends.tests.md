@@ -129,6 +129,7 @@ tags: [child]
 version: 1.0
 ---
 Content
+
 </output>
 
 ## Recursive Inheritance
@@ -241,7 +242,6 @@ vars:
   theme: dark
   lang: en
 ---
-
 My content.
 </output>
 
@@ -289,7 +289,9 @@ baz: qux
 ---
 foo: bar
 baz: qux
----</output>
+---
+
+</output>
 
 ## Edge Cases
 
