@@ -4,9 +4,6 @@ import { processExtends } from './extends';
 import { processVars } from './vars';
 import { processTransclusions } from './transclusion';
 
-/**
- * Compiler options
- */
 export type CompileOptions = {
   resolver: DocumentResolver;
 }
@@ -32,7 +29,7 @@ export async function compile(source: string, options: CompileOptions): Promise<
     resolver: options.resolver
   };
   
-  // Pipeline stages (order matters!)
+  // Pipeline stages (order matters)
   document = await processExtends({ ...context, document });
   document = await processVars({ ...context, document });
   document = await processTransclusions({ ...context, document });

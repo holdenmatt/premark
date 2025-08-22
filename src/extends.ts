@@ -2,17 +2,13 @@ import matter from 'gray-matter';
 import { Document, CompilationContext } from './types';
 
 /**
- * Processes document inheritance (extends)
- * 
- * This module handles:
- * - Resolving parent documents
- * - Merging frontmatter (child overrides parent)
- * - Inserting child content into parent slots
- * - Circular dependency detection
- */
-
-/**
  * Process extends directive in a document
+ * 
+ * - Resolves parent documents recursively
+ * - Merges frontmatter with child overrides winning
+ * - Handles {{ content }} markers for explicit placement
+ * - Falls back to concatenation with \n\n separator
+ * - Detects circular references
  */
 export async function processExtends(
   context: CompilationContext,
