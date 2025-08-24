@@ -36,22 +36,6 @@ Hello {{ name }}!`;
     expect(stdout).toBe('Hello World!');
   });
 
-  it('reads from stdin when no file argument provided', async () => {
-    const content = `---
-greeting: Hi
----
-{{ greeting }} from stdin!`;
-
-    const child = execFile('node', [CLI_PATH], (error, stdout) => {
-      expect(error).toBeNull();
-      expect(stdout).toContain('Hi from stdin!');
-    });
-
-    child.stdin?.write(content);
-    child.stdin?.end();
-
-    await new Promise((resolve) => child.on('exit', resolve));
-  });
 
   it('resolves transclusions relative to file directory', async () => {
     const baseFile = join(tempDir, 'base.md');
@@ -66,41 +50,23 @@ greeting: Hi
     expect(stdout).toContain('More content');
   });
 
-  it('resolves transclusions relative to cwd when reading from stdin', async () => {
-    const baseFile = join(process.cwd(), 'base-stdin-test.md');
 
-    try {
-      await writeFile(baseFile, '# Content from file');
-
-      const content = '@base-stdin-test.md\n\nFrom stdin';
-
-      const child = execFile(
-        'node',
-        [CLI_PATH],
-        { cwd: process.cwd() },
-        (error, stdout) => {
-          expect(error).toBeNull();
-          expect(stdout).toContain('# Content from file');
-          expect(stdout).toContain('From stdin');
-        }
-      );
-
-      child.stdin?.write(content);
-      child.stdin?.end();
-
-      await new Promise((resolve) => child.on('exit', resolve));
-    } finally {
-      await rm(baseFile, { force: true });
-    }
-  });
-
-  it('shows help when run with no arguments in TTY mode', async () => {
-    // This test would need to mock process.stdin.isTTY
-    // For now, we can test that --help works
+  it('shows help when --help flag is used', async () => {
     const { stdout } = await exec('node', [CLI_PATH, '--help']);
 
     expect(stdout).toContain('premark');
-    expect(stdout).toContain('Input file path (reads from stdin if omitted)');
+    expect(stdout).toContain('Input file path');
+    expect(stdout).not.toContain('stdin');
+  });
+  it('shows error when no arguments provided', async () => {
+    try {
+      await exec('node', [CLI_PATH]);
+      expect.fail('Should have thrown an error');
+    } catch (error: unknown) {
+      const execError = error as { stderr: string; code: number };
+      expect(execError.stderr).toContain("error: missing required argument 'input'");
+      expect(execError.code).toBe(1);
+    }
   });
 
   it('handles errors gracefully', async () => {

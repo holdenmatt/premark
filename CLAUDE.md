@@ -14,7 +14,7 @@ At the start of each session, read:
 Before finishing any code changes:
 
 1. Run `pnpm format` to auto-fix all formatting/linting issues
-2. Run `pnpm check` to verify everything passes
+2. Run `pnpm lint` to check for any remaining issues
 
 ## 💻 Code Style
 

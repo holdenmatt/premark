@@ -16,7 +16,6 @@ It reads standard markdown (of any flavor), processes it, and outputs markdown:
 
 ```bash
 premark input.md > output.md
-cat input.md | premark > output.md
 ```
 
 ## Install
