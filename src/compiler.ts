@@ -1,11 +1,17 @@
 import matter from 'gray-matter';
 import { processExtends } from './extends';
 import { processTransclusions } from './transclusion';
-import type { CompilationContext, Document, DocumentResolver } from './types';
+import {
+  type CompilationContext,
+  type Document,
+  type DocumentResolver,
+  parseDocument,
+} from './types';
 import { processVars } from './vars';
 
 export type CompileOptions = {
   resolver: DocumentResolver;
+  vars?: Record<string, string>;
 };
 
 /**
@@ -14,16 +20,17 @@ export type CompileOptions = {
  * Order of operations:
  * 1. Parse source document
  * 2. Process extends (inheritance)
- * 3. Process variables (substitution)
- * 4. Process transclusions (@ references)
- * 5. Format output
+ * 3. Merge CLI variables (override frontmatter)
+ * 4. Process variables (substitution)
+ * 5. Process transclusions (@ references)
+ * 6. Format output
  */
 export async function compile(
   source: string,
   options: CompileOptions
 ): Promise<string> {
   // Parse the source document
-  const { data: frontmatter, content } = matter(source);
+  const { frontmatter, content } = parseDocument(source);
   let document: Document = { frontmatter, content };
 
   // Create context
@@ -34,6 +41,12 @@ export async function compile(
 
   // Pipeline stages (order matters)
   document = await processExtends({ ...context, document });
+
+  // Merge CLI variables AFTER extends so they override everything
+  if (options.vars) {
+    document.frontmatter = { ...document.frontmatter, ...options.vars };
+  }
+
   document = await processVars({ ...context, document });
   document = await processTransclusions({ ...context, document });
 

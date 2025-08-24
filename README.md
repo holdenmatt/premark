@@ -79,7 +79,7 @@ Follow team conventions and best practices.
 
 By default, all frontmatter is stripped from the compiled output. This lets you use frontmatter for documentation, metadata, or versioning without polluting the final markdown.
 
-To include specific values in the output, place them under the `output:` key:
+To retain frontmatter values in the output, put them under the `output:` key:
 
 ```
 ---
@@ -88,17 +88,15 @@ version: 1.0.2  # stripped
 output:         # preserved in output
   temperature: 0.7
 ---
-
 Content here...
 ```
 
 Compiles to:
 
-```markdown
+```
 ---
 temperature: 0.7
 ---
-
 Content here...
 ```
 
@@ -111,9 +109,9 @@ premark/
 │   ├── cli.ts          # CLI entry point
 │   ├── compiler.ts     # Main compilation logic
 │   ├── extends.ts      # Extends implementation
-│   ├── vars.ts         # Variable substitution
-│   ├── transclusion.ts # Transclusion implementation
 │   ├── resolver.ts     # Document path resolution
+│   ├── transclusion.ts # Transclusion implementation
+│   ├── vars.ts         # Variable substitution
 │   └── types.ts        # TypeScript types
 ├── specs/              # Feature specs & test cases
 ├── tests/              # Vitest test suite

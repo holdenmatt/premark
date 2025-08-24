@@ -1,5 +1,4 @@
-import matter from 'gray-matter';
-import type { CompilationContext, Document } from './types';
+import { type CompilationContext, type Document, parseDocument } from './types';
 
 /**
  * Process transclusion references in a document
@@ -33,7 +32,7 @@ export async function processTransclusions(
 
       // Resolve and replace the entire line
       const docSource = await resolver(path);
-      const { data: frontmatter, content } = matter(docSource);
+      const { frontmatter, content } = parseDocument(docSource);
 
       // Add this path to visited set for recursion
       const newVisited = new Set(_visitedPaths);

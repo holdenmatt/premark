@@ -1,5 +1,4 @@
-import matter from 'gray-matter';
-import type { CompilationContext, Document } from './types';
+import { type CompilationContext, type Document, parseDocument } from './types';
 
 /**
  * Process extends directive in a document
@@ -30,13 +29,12 @@ export async function processExtends(
 
   // Load and parse parent
   const parentSource = await resolver(parentPath);
-  const { data: parentFrontmatter, content: parentContent } =
-    matter(parentSource);
+  const parentDocument = parseDocument(parentSource);
 
   // Recursively process parent's extends
   const processedParent = await processExtends(
     {
-      document: { frontmatter: parentFrontmatter, content: parentContent },
+      document: parentDocument,
       resolver,
     },
     new Set([..._visited, parentPath])

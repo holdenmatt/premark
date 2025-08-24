@@ -36,7 +36,6 @@ Hello {{ name }}!`;
     expect(stdout).toBe('Hello World!');
   });
 
-
   it('resolves transclusions relative to file directory', async () => {
     const baseFile = join(tempDir, 'base.md');
     const mainFile = join(tempDir, 'main.md');
@@ -49,7 +48,6 @@ Hello {{ name }}!`;
     expect(stdout).toContain('# Base content');
     expect(stdout).toContain('More content');
   });
-
 
   it('shows help when --help flag is used', async () => {
     const { stdout } = await exec('node', [CLI_PATH, '--help']);
@@ -64,7 +62,9 @@ Hello {{ name }}!`;
       expect.fail('Should have thrown an error');
     } catch (error: unknown) {
       const execError = error as { stderr: string; code: number };
-      expect(execError.stderr).toContain("error: missing required argument 'input'");
+      expect(execError.stderr).toContain(
+        "error: missing required argument 'input'"
+      );
       expect(execError.code).toBe(1);
     }
   });
@@ -80,5 +80,107 @@ Hello {{ name }}!`;
       expect(execError.stderr).toContain('Error:');
       expect(execError.code).toBe(1);
     }
+  });
+
+  describe('--var flag', () => {
+    it('accepts single --var flag', async () => {
+      const inputPath = join(tempDir, 'var-test.md');
+      const content = `---
+name: Default
+---
+Hello {{ name }}!`;
+
+      await writeFile(inputPath, content);
+
+      const { stdout } = await exec('node', [
+        CLI_PATH,
+        inputPath,
+        '--var',
+        'name=John',
+      ]);
+
+      // CLI var should override frontmatter
+      expect(stdout).toBe('Hello John!');
+    });
+
+    it('accepts multiple --var flags', async () => {
+      const inputPath = join(tempDir, 'multi-var.md');
+      const content = '{{ greeting }} {{ name }}!';
+
+      await writeFile(inputPath, content);
+
+      const { stdout } = await exec('node', [
+        CLI_PATH,
+        inputPath,
+        '--var',
+        'greeting=Hi',
+        '--var',
+        'name=Alice',
+      ]);
+
+      expect(stdout).toBe('Hi Alice!');
+    });
+
+    it('handles values with special characters', async () => {
+      const inputPath = join(tempDir, 'special-chars.md');
+      const content = 'URL: {{ url }}';
+
+      await writeFile(inputPath, content);
+
+      const { stdout } = await exec('node', [
+        CLI_PATH,
+        inputPath,
+        '--var',
+        'url=https://example.com/path?query=value&foo=bar',
+      ]);
+
+      expect(stdout).toBe('URL: https://example.com/path?query=value&foo=bar');
+    });
+
+    it('rejects invalid --var format', async () => {
+      const inputPath = join(tempDir, 'dummy.md');
+      await writeFile(inputPath, 'test');
+
+      try {
+        await exec('node', [CLI_PATH, inputPath, '--var', 'invalid']);
+        expect.fail('Should have thrown an error');
+      } catch (error: unknown) {
+        const execError = error as { stderr: string; code: number };
+        expect(execError.stderr).toContain('Invalid variable format');
+        expect(execError.stderr).toContain('Expected format: key=value');
+        expect(execError.code).toBe(1);
+      }
+    });
+
+    it('rejects empty key in --var', async () => {
+      const inputPath = join(tempDir, 'dummy.md');
+      await writeFile(inputPath, 'test');
+
+      try {
+        await exec('node', [CLI_PATH, inputPath, '--var', '=value']);
+        expect.fail('Should have thrown an error');
+      } catch (error: unknown) {
+        const execError = error as { stderr: string; code: number };
+        expect(execError.stderr).toContain('Invalid variable format');
+        expect(execError.stderr).toContain('Key cannot be empty');
+        expect(execError.code).toBe(1);
+      }
+    });
+
+    it('allows empty value in --var', async () => {
+      const inputPath = join(tempDir, 'empty-value.md');
+      const content = 'Value: "{{ value }}"';
+
+      await writeFile(inputPath, content);
+
+      const { stdout } = await exec('node', [
+        CLI_PATH,
+        inputPath,
+        '--var',
+        'value=',
+      ]);
+
+      expect(stdout).toBe('Value: ""');
+    });
   });
 });
