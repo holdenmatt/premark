@@ -39,30 +39,27 @@ Variables cascade from parent to child.
 ```
 <file name="base.md">
 ---
-vars:
-  name: Bob
-  age: 30
-  role: user
+name: Bob
+age: 30
+role: user
 ---
 Hello {{ name }}!</file>
 
 <input>
 ---
 extends: base.md
-vars:
-  name: Alice
-  status: active
+name: Alice
+status: active
 ---
 You are {{ age }} years old.
 </input>
 
 <output>
 ---
-vars:
-  name: Alice
-  age: 30
-  role: user
-  status: active
+name: Alice
+age: 30
+role: user
+status: active
 ---
 Hello {{ name }}!
 
@@ -77,31 +74,28 @@ Nested objects in vars are replaced entirely, not deep merged.
 ```
 <file name="base.md">
 ---
-vars:
-  config:
-    theme: dark
-    size: large
-    enabled: true
-  name: Base
+config:
+  theme: dark
+  size: large
+  enabled: true
+name: Base
 ---
 Content</file>
 
 <input>
 ---
 extends: base.md
-vars:
-  config:
-    theme: light
-  name: Child
+config:
+  theme: light
+name: Child
 ---
 </input>
 
 <output>
 ---
-vars:
-  config:
-    theme: light
-  name: Child
+config:
+  theme: light
+name: Child
 ---
 Content
 
@@ -150,9 +144,8 @@ Grandparent → Parent → Child chain.
 <file name="grandparent.md">
 ---
 level: grandparent
-vars:
-  a: 1
-  b: 2
+a: 1
+b: 2
 ---
 Grandparent content.</file>
 
@@ -160,9 +153,8 @@ Grandparent content.</file>
 ---
 extends: grandparent.md
 level: parent
-vars:
-  b: 20
-  c: 30
+b: 20
+c: 30
 ---
 Parent content.</file>
 
@@ -170,9 +162,8 @@ Parent content.</file>
 ---
 extends: parent.md
 level: child
-vars:
-  c: 300
-  d: 400
+c: 300
+d: 400
 ---
 Child content.
 </input>
@@ -180,11 +171,10 @@ Child content.
 <output>
 ---
 level: child
-vars:
-  a: 1
-  b: 20
-  c: 300
-  d: 400
+a: 1
+b: 20
+c: 300
+d: 400
 ---
 Grandparent content.
 
@@ -237,9 +227,8 @@ Parent with only frontmatter.
 ```
 <file name="config.md">
 ---
-vars:
-  theme: dark
-  lang: en
+theme: dark
+lang: en
 ---</file>
 
 <input>
@@ -251,9 +240,8 @@ My content.
 
 <output>
 ---
-vars:
-  theme: dark
-  lang: en
+theme: dark
+lang: en
 ---
 My content.
 </output>
@@ -312,68 +300,6 @@ baz: qux
 ```
 
 ## Edge Cases
-
-### No Variables in Parent
-
-Parent without vars field.
-
-```
-<file name="base.md">
----
-title: Base
----
-Content</file>
-
-<input>
----
-extends: base.md
-vars:
-  name: Test
----
-Hello {{ name }}
-</input>
-
-<output>
----
-title: Base
-vars:
-  name: Test
----
-Content
-
-Hello {{ name }}
-</output>
-```
-
-### No Variables in Child
-
-Child without vars field.
-
-```
-<file name="base.md">
----
-vars:
-  name: Test
----
-Hello {{ name }}</file>
-
-<input>
----
-extends: base.md
----
-More content
-</input>
-
-<output>
----
-vars:
-  name: Test
----
-Hello {{ name }}
-
-More content
-</output>
-```
 
 ### Path with Subdirectory
 

@@ -31,8 +31,7 @@ Base template (`assistant.md`):
 
 ```markdown
 ---
-vars:
-  tone: helpful
+tone: helpful
 ---
 
 You are a {{ tone }} assistant.
@@ -45,8 +44,7 @@ Specialized assistant (`code-reviewer.md`):
 ```markdown
 ---
 extends: @assistant.md
-vars:
-  tone: constructive
+tone: constructive
 ---
 
 Review this PR for bugs and style issues.

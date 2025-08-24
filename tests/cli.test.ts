@@ -25,8 +25,7 @@ describe('CLI', () => {
   it('reads from file argument and outputs to stdout', async () => {
     const inputPath = join(tempDir, 'input.md');
     const content = `---
-vars:
-  name: World
+name: World
 ---
 Hello {{ name }}!`;
 
@@ -39,8 +38,7 @@ Hello {{ name }}!`;
 
   it('reads from stdin when no file argument provided', async () => {
     const content = `---
-vars:
-  greeting: Hi
+greeting: Hi
 ---
 {{ greeting }} from stdin!`;
 

@@ -37,10 +37,9 @@ export async function compile(
   document = await processVars({ ...context, document });
   document = await processTransclusions({ ...context, document });
 
-  // Format output - only include frontmatter from 'output' key
-  const outputFrontmatter = document.frontmatter.output || {};
-  if (Object.keys(outputFrontmatter).length > 0) {
-    return matter.stringify(document.content, outputFrontmatter);
+  // Format output - processVars has already extracted the output fields
+  if (Object.keys(document.frontmatter).length > 0) {
+    return matter.stringify(document.content, document.frontmatter);
   }
   return document.content;
 }

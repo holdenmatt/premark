@@ -69,14 +69,6 @@ export async function processExtends(
     ...childFrontmatter,
   };
 
-  // Special handling for vars - deep merge with child overriding
-  if (processedParent.frontmatter.vars || document.frontmatter.vars) {
-    mergedFrontmatter.vars = {
-      ...processedParent.frontmatter.vars,
-      ...document.frontmatter.vars,
-    };
-  }
-
   return {
     frontmatter: mergedFrontmatter,
     content: mergedContent,

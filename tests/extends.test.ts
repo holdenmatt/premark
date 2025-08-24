@@ -1,7 +1,6 @@
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { processExtends } from '../src/extends';
-import { documentsEqual } from '../src/types';
 import { loadMarkdownTests } from './utils/test-utils';
 
 const testFile = join(__dirname, '../specs/extends.tests.md');
@@ -17,7 +16,10 @@ describe('Extends', () => {
             );
           } else {
             const result = await processExtends(test.context);
-            expect(documentsEqual(result, test.expectedOutput!)).toBe(true);
+            expect(result.frontmatter).toEqual(
+              test.expectedOutput!.frontmatter
+            );
+            expect(result.content).toBe(test.expectedOutput!.content);
           }
         });
       });

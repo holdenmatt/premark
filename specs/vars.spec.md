@@ -1,14 +1,14 @@
 # Vars Spec
 
-Substitutes `{{ variable }}` placeholders with values defined in the frontmatter `vars` field.
+Substitutes `{{ variable }}` placeholders with values defined in frontmatter.
 
 > [Test cases](vars.tests.md)
 
 ## Rules
 
-*Note: Variable inheritance/cascading through `extends` is covered in the Extends spec.*
+_Note: Variable inheritance/cascading through `extends` is covered in the Extends spec._
 
-1. **Substitution**: Replace `{{ name }}` in content with value of `vars.name` from frontmatter
+1. **Substitution**: Replace `{{ name }}` in content with corresponding frontmatter field value
 
 2. **Matching**: Exactly two braces, optional whitespace around name: `{{name}}`, `{{ name }}`, `{{  name  }}`
 
@@ -20,4 +20,4 @@ Substitutes `{{ variable }}` placeholders with values defined in the frontmatter
 
 6. **Missing variables**: Error if a placeholder has no corresponding variable
 
-7. **Cleanup**: `vars` is removed from output frontmatter after processing
+7. **Cleanup**: All frontmatter is removed from output except any fields under an `output:` key

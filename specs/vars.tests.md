@@ -9,9 +9,8 @@ Simple variable substitution.
 ```
 <input>
 ---
-vars:
-  name: Alice
-  age: 30
+name: Alice
+age: 30
 ---
 Hello {{ name }}, you are {{ age }} years old.
 </input>
@@ -28,8 +27,7 @@ Spaces inside braces are normalized.
 ```
 <input>
 ---
-vars:
-  x: test
+x: test
 ---
 {{x}} {{ x }} {{  x  }}
 </input>
@@ -46,11 +44,10 @@ Various valid variable name formats.
 ```
 <input>
 ---
-vars:
-  my-var: hyphenated
-  var_1: underscore
-  FOO: uppercase
-  camelCase: mixed
+my-var: hyphenated
+var_1: underscore
+FOO: uppercase
+camelCase: mixed
 ---
 {{ my-var }} {{ var_1 }} {{ FOO }} {{ camelCase }}
 </input>
@@ -67,13 +64,12 @@ Non-string values are converted to strings.
 ```
 <input>
 ---
-vars:
-  count: 42
-  enabled: true
-  items: [1, 2, 3]
-  config:
-    key: value
-  nothing: null
+count: 42
+enabled: true
+items: [1, 2, 3]
+config:
+  key: value
+nothing: null
 ---
 Count: {{ count }}
 Enabled: {{ enabled }}
@@ -109,8 +105,7 @@ This is the header content.
 
 <input>
 ---
-vars:
-  header: "@header.md"
+header: "@header.md"
 ---
 {{ header }}
 
@@ -129,7 +124,7 @@ Main content here.
 
 ### No Variables
 
-Documents without vars field pass through unchanged.
+Documents without variable placeholders pass through with frontmatter removed (unless under output:).
 
 ```
 <input>
@@ -137,36 +132,35 @@ Documents without vars field pass through unchanged.
 title: My Document
 author: John
 ---
-No processing happens without vars.
+No substitution happens without placeholders.
 </input>
 
 <output>
----
-title: My Document
-author: John
----
-No processing happens without vars.
+No substitution happens without placeholders.
 </output>
 ```
 
-### Empty Variables
+### Variables With Output
 
-Empty vars object is removed from output.
+Variables under output: key are preserved in the final document.
 
 ```
 <input>
 ---
-vars: {}
-title: Test
+title: My Spec
+output:
+  temperature: 0.7
+  model: gpt-4
 ---
-Content
+Content here
 </input>
 
 <output>
 ---
-title: Test
+temperature: 0.7
+model: gpt-4
 ---
-Content
+Content here
 </output>
 ```
 
@@ -177,9 +171,8 @@ Placeholders inside variable values are not processed.
 ```
 <input>
 ---
-vars:
-  a: "{{ b }}"
-  b: "value"
+a: "{{ b }}"
+b: "value"
 ---
 Result: {{ a }}
 </input>
@@ -198,8 +191,7 @@ Error when placeholder has no corresponding variable.
 ```
 <input>
 ---
-vars:
-  x: hello
+x: hello
 ---
 {{ x }} and {{ y }}
 </input>

@@ -1,6 +1,5 @@
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { documentsEqual } from '../src/types';
 import { processVars } from '../src/vars';
 import { loadMarkdownTests } from './utils/test-utils';
 
@@ -17,7 +16,10 @@ describe('Vars', () => {
             );
           } else {
             const result = await processVars(test.context);
-            expect(documentsEqual(result, test.expectedOutput!)).toBe(true);
+            expect(result.frontmatter).toEqual(
+              test.expectedOutput!.frontmatter
+            );
+            expect(result.content).toBe(test.expectedOutput!.content);
           }
         });
       });

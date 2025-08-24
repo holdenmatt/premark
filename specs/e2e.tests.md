@@ -9,9 +9,8 @@ Extends + vars + transclusion working in correct order.
 ```
 <file name="base.md">
 ---
-vars:
-  title: Base Title
-  author: Original Author
+title: Base Title
+author: Original Author
 ---
 # {{ title }}
 
@@ -23,8 +22,7 @@ Base content with a reference:
 <input>
 ---
 extends: base.md
-vars:
-  title: Child Title
+title: Child Title
 ---
 Child content by {{ author }}
 </input>
@@ -46,8 +44,7 @@ Layout with {{ content }} marker, vars, and transclusion.
 ```
 <file name="layout.md">
 ---
-vars:
-  header: "Site Header"
+header: "Site Header"
 ---
 {{ header }}
 
@@ -79,19 +76,17 @@ Variables cascade through grandparent → parent → child with transclusion.
 ```
 <file name="grandparent.md">
 ---
-vars:
-  a: 1
-  b: 2
-  c: 3
+a: 1
+b: 2
+c: 3
 ---
 GP: a={{ a }}, b={{ b }}, c={{ c }}</file>
 
 <file name="parent.md">
 ---
 extends: grandparent.md
-vars:
-  b: 20
-  d: 40
+b: 20
+d: 40
 ---
 P: b={{ b }}, d={{ d }}
 @snippet.md</file>
@@ -101,8 +96,7 @@ P: b={{ b }}, d={{ d }}
 <input>
 ---
 extends: parent.md
-vars:
-  c: 300
+c: 300
 ---
 C: a={{ a }}, b={{ b }}, c={{ c }}, d={{ d }}
 </input>
@@ -170,8 +164,7 @@ Output key is inherited and can be overridden in child documents.
 ```
 <file name="base.md">
 ---
-vars:
-  title: Base
+title: Base
 output:
   model: gpt4
   temperature: 0.5
@@ -182,8 +175,7 @@ output:
 <input>
 ---
 extends: base.md
-vars:
-  title: Child
+title: Child
 output:
   temperature: 0.9
 ---
