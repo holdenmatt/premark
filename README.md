@@ -42,7 +42,7 @@ Specialized assistant (`code-reviewer.md`):
 
 ```markdown
 ---
-extends: @assistant.md
+extends: assistant.md
 tone: constructive
 ---
 
@@ -139,3 +139,7 @@ For detailed specs and test cases:
 ## License
 
 MIT
+
+- frontmatter
+- @includes
+- {{variables}}
