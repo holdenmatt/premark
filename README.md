@@ -1,10 +1,10 @@
-# premark
+# SpecTree
 
 A markdown preprocessor for composable, reusable LLM specs.
 
 ## What it does
 
-Premark is a markdown-to-markdown preprocessor that enables composable, reusable instructions for LLM tools like Claude Code, Cursor, and other AI coding assistants.
+SpecTree is a markdown-to-markdown preprocessor that enables composable, reusable instructions for LLM tools like Claude Code, Cursor, and other AI coding assistants.
 
 It adds three features to markdown:
 
@@ -15,13 +15,13 @@ It adds three features to markdown:
 It reads standard markdown (of any flavor), processes it, and outputs markdown:
 
 ```bash
-premark input.md > output.md
+spectree input.md > output.md
 ```
 
 ## Install
 
 ```bash
-npm install -g @holdenmatt/premark
+npm install -g @holdenmatt/spectree-cli
 ```
 
 ## Example
@@ -57,7 +57,7 @@ Shared context (`guidelines.md`):
 Follow team conventions and best practices.
 ```
 
-Running `premark code-reviewer.md` outputs:
+Running `spectree code-reviewer.md` outputs:
 
 ```markdown
 You are a constructive assistant.
@@ -102,25 +102,22 @@ Content here...
 ## Project Structure
 
 ```
-premark/
+spectree/
 ├── packages/
-│   ├── premark/        # Core TypeScript library (ESM)
-│   └── premark-cli/    # CLI package (bin: `premark`)
+│   ├── spectree/        # Core TypeScript library (ESM)
+│   └── spectree-cli/    # CLI package (bin: `spectree`)
 ├── specs/              # Markdown specs
 ├── tests/              # Markdown test cases
-├── examples/           # Example markdown files
-├── pnpm-workspace.yaml # Workspace config
-├── tsconfig.base.json  # Shared TS config
-└── package.json        # Workspace scripts
+└── examples/           # Example markdown files
 ```
 
 ## Specs
 
 For detailed specs and test cases:
 
-- [Includes](https://github.com/holdenmatt/premark/blob/main/specs/include.spec.md)
-- [Vars](https://github.com/holdenmatt/premark/blob/main/specs/vars.spec.md)
-- [Extends](https://github.com/holdenmatt/premark/blob/main/specs/extends.spec.md)
+- [Includes](https://github.com/holdenmatt/spectree/blob/main/specs/include.spec.md)
+- [Vars](https://github.com/holdenmatt/spectree/blob/main/specs/vars.spec.md)
+- [Extends](https://github.com/holdenmatt/spectree/blob/main/specs/extends.spec.md)
 
 ## Prior Art
 

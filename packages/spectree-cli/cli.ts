@@ -2,7 +2,7 @@
 
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { compile, createFileResolver } from '@holdenmatt/premark';
+import { compile, createFileResolver } from '@holdenmatt/spectree';
 import { Command } from 'commander';
 import { version } from './package.json';
 
@@ -29,7 +29,7 @@ function collectVars(value: string, previous: Record<string, string>) {
 }
 
 program
-  .name('premark')
+  .name('spectree')
   .description('A minimal markdown preprocessor for composable instructions')
   .version(version)
   .argument('<input>', 'Input file path')

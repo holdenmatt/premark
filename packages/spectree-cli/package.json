@@ -1,24 +1,24 @@
 {
-  "name": "@holdenmatt/premark-cli",
+  "name": "@holdenmatt/spectree-cli",
   "version": "0.0.5",
-  "description": "CLI for the premark markdown preprocessor",
+  "description": "CLI for the spectree markdown preprocessor",
   "author": "Matt Holden",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "premark": "./dist/cli.js"
+    "spectree": "./dist/cli.js"
   },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "pnpm -w -F @holdenmatt/premark build && pnpm build && vitest run",
+    "test": "pnpm -w -F @holdenmatt/spectree build && pnpm build && vitest run",
     "test:watch": "vitest",
     "lint": "ultracite lint",
     "format": "ultracite format",
     "prepublishOnly": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@holdenmatt/premark": "workspace:*",
+    "@holdenmatt/spectree": "workspace:*",
     "commander": "^14.0.0"
   },
   "devDependencies": {

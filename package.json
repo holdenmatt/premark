@@ -1,5 +1,5 @@
 {
-  "name": "premark-workspace",
+  "name": "spectree-workspace",
   "private": true,
   "workspaces": [
     "packages/*"

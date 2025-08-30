@@ -1,5 +1,5 @@
 {
-  "name": "@holdenmatt/premark",
+  "name": "@holdenmatt/spectree",
   "version": "0.0.5",
   "description": "A markdown preprocessor for composable, reusable LLM specs.",
   "author": "Matt Holden",
@@ -7,9 +7,9 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/holdenmatt/premark"
+    "url": "https://github.com/holdenmatt/spectree"
   },
-  "homepage": "https://github.com/holdenmatt/premark",
+  "homepage": "https://github.com/holdenmatt/spectree",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

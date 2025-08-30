@@ -13,7 +13,7 @@ describe('CLI', () => {
 
   beforeEach(async () => {
     // Create a temporary directory for test files
-    tempDir = join(tmpdir(), `premark-test-${Date.now()}`);
+    tempDir = join(tmpdir(), `spectree-test-${Date.now()}`);
     await mkdir(tempDir, { recursive: true });
   });
 
@@ -52,7 +52,7 @@ Hello {{ name }}!`;
   it('shows help when --help flag is used', async () => {
     const { stdout } = await exec('node', [CLI_PATH, '--help']);
 
-    expect(stdout).toContain('premark');
+    expect(stdout).toContain('spectree');
     expect(stdout).toContain('Input file path');
     expect(stdout).not.toContain('stdin');
   });
