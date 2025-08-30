@@ -1,25 +1,25 @@
 import { testmark } from '@holdenmatt/testmark/vitest';
 import matter from 'gray-matter';
-import { compile } from '../typescript/src/compiler';
-import { processExtends } from '../typescript/src/extends';
-import { createMemoryResolver } from '../typescript/src/resolver';
+import { compile } from '../src/compiler';
+import { processExtends } from '../src/extends';
+import { createMemoryResolver } from '../src/resolver';
 
 testmark(
-  'specs/vars.tests.md',
+  '../../specs/vars.tests.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }
 );
 
 testmark(
-  'specs/include.tests.md',
+  '../../specs/include.tests.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }
 );
 
 testmark(
-  'specs/extends.tests.md',
+  '../../specs/extends.tests.md',
   async (input: string, files?: Record<string, string>) => {
     const parsed = matter(input);
     const result = await processExtends({
@@ -31,7 +31,7 @@ testmark(
 );
 
 testmark(
-  'specs/compiler.tests.md',
+  '../../specs/compiler.tests.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }

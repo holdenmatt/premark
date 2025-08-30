@@ -1,6 +1,6 @@
 # premark
 
-A markdown preprocessor for composable instructions.
+A markdown preprocessor for composable, reusable LLM specs.
 
 ## What it does
 

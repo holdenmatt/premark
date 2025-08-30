@@ -1,0 +1,35 @@
+{
+  "name": "@holdenmatt/premark-cli",
+  "version": "0.0.5",
+  "description": "CLI for the premark markdown preprocessor",
+  "author": "Matt Holden",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "premark": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "pnpm -w -F @holdenmatt/premark build && pnpm build && vitest run",
+    "test:watch": "vitest",
+    "lint": "ultracite lint",
+    "format": "ultracite format",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "@holdenmatt/premark": "workspace:*",
+    "commander": "^14.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "@types/node": "^24.3.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "ultracite": "5.2.4",
+    "vitest": "^3.2.4"
+  },
+  "files": [
+    "dist"
+  ]
+}

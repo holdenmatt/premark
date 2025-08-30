@@ -2,9 +2,9 @@
 
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import { compile, createFileResolver } from '@holdenmatt/premark';
 import { Command } from 'commander';
 import { version } from '../package.json';
-import { compile, createFileResolver } from './index';
 
 const program = new Command();
 
@@ -22,11 +22,9 @@ function collectVars(value: string, previous: Record<string, string>) {
 
   const key = value.slice(0, equalIndex).trim();
   const val = value.slice(equalIndex + 1); // Don't trim value - preserve spaces
-
   if (!key) {
     throw new Error(`Invalid variable format: "${value}". Key cannot be empty`);
   }
-
   return { ...previous, [key]: val };
 }
 
@@ -41,7 +39,6 @@ program
       const inputPath = resolve(input);
       const source = await readFile(inputPath, 'utf-8');
       const resolver = createFileResolver(dirname(inputPath));
-
       const result = await compile(source, {
         resolver,
         vars: Object.keys(options.var).length > 0 ? options.var : undefined,

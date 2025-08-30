@@ -6,11 +6,10 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  packages/premark:
     dependencies:
-      commander:
-        specifier: ^14.0.0
-        version: 14.0.0
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
@@ -21,6 +20,34 @@ importers:
       '@holdenmatt/testmark':
         specifier: ^0.0.5
         version: 0.0.5(vitest@3.2.4(@types/node@24.3.0)(yaml@2.8.1))
+      '@types/node':
+        specifier: ^24.3.0
+        version: 24.3.0
+      tsup:
+        specifier: ^8.5.0
+        version: 8.5.0(postcss@8.5.6)(typescript@5.9.2)(yaml@2.8.1)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+      ultracite:
+        specifier: 5.2.4
+        version: 5.2.4(@types/node@24.3.0)(typescript@5.9.2)(yaml@2.8.1)
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@24.3.0)(yaml@2.8.1)
+
+  packages/premark-cli:
+    dependencies:
+      '@holdenmatt/premark':
+        specifier: workspace:*
+        version: link:../premark
+      commander:
+        specifier: ^14.0.0
+        version: 14.0.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 2.2.0
+        version: 2.2.0
       '@types/node':
         specifier: ^24.3.0
         version: 24.3.0

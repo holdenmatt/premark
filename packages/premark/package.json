@@ -1,7 +1,7 @@
 {
   "name": "@holdenmatt/premark",
   "version": "0.0.5",
-  "description": "A markdown preprocessor for composable instructions",
+  "description": "A markdown preprocessor for composable, reusable LLM specs.",
   "author": "Matt Holden",
   "license": "MIT",
   "type": "module",
@@ -20,7 +20,6 @@
     "prepublishOnly": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "commander": "^14.0.0",
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
@@ -38,11 +37,7 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "bin": {
-    "premark": "./dist/cli.js"
-  },
   "files": [
     "dist"
-  ],
-  "packageManager": "pnpm@10.11.0"
+  ]
 }

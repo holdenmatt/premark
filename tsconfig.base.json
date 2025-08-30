@@ -7,12 +7,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
-    "outDir": "./dist",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "resolveJsonModule": true
-  },
-  "include": ["typescript/src/**/*.ts", "tests/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  }
 }
+
