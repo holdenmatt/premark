@@ -126,8 +126,9 @@ tags: [child]
 <output>
 ---
 title: New Title
-tags: [child]
-version: 1.0
+tags:
+  - child
+version: 1
 ---
 Content
 

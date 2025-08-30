@@ -64,7 +64,6 @@ Page content here
 Site Header
 
 Page content here
-
 © 2024 Footer
 </output>
 ```
