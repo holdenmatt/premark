@@ -18,6 +18,9 @@ importers:
       '@biomejs/biome':
         specifier: 2.2.0
         version: 2.2.0
+      '@holdenmatt/testmark':
+        specifier: ^0.0.5
+        version: 0.0.5(vitest@3.2.4(@types/node@24.3.0)(yaml@2.8.1))
       '@types/node':
         specifier: ^24.3.0
         version: 24.3.0
@@ -250,6 +253,15 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@holdenmatt/testmark@0.0.5':
+    resolution: {integrity: sha512-pKv87hrIm5oaX0SokTXve/qrd14t9F9v81I6nZ5qVSCApFkqZHKQmK+sul08VlEZtuWJKcoejQPWUPwz6S3XVQ==}
+    hasBin: true
+    peerDependencies:
+      vitest: '>=3.0.0'
+    peerDependenciesMeta:
+      vitest:
+        optional: true
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -1149,6 +1161,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.9':
     optional: true
+
+  '@holdenmatt/testmark@0.0.5(vitest@3.2.4(@types/node@24.3.0)(yaml@2.8.1))':
+    optionalDependencies:
+      vitest: 3.2.4(@types/node@24.3.0)(yaml@2.8.1)
 
   '@isaacs/cliui@8.0.2':
     dependencies:

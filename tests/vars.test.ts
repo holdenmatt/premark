@@ -1,28 +1,15 @@
-import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
-import { processVars } from '../src/vars';
-import { loadMarkdownTests } from './utils/test-utils';
+import { testmark } from '@holdenmatt/testmark/vitest';
+import { compile } from '../src/compiler';
 
-const testFile = join(__dirname, '../specs/vars.tests.md');
-
-describe('Vars', () => {
-  loadMarkdownTests(testFile, (category, tests) => {
-    describe(category, () => {
-      tests.forEach((test) => {
-        it(test.name, async () => {
-          if (test.expectedError) {
-            await expect(processVars(test.context)).rejects.toThrow(
-              test.expectedError
-            );
-          } else {
-            const result = await processVars(test.context);
-            expect(result.frontmatter).toEqual(
-              test.expectedOutput!.frontmatter
-            );
-            expect(result.content).toBe(test.expectedOutput!.content);
-          }
-        });
-      });
-    });
-  });
-});
+testmark(
+  'specs/vars.tests.md',
+  (input: string, files?: Record<string, string>) => {
+    const resolver = (path: string): Promise<string> => {
+      if (files && path in files) {
+        return Promise.resolve(files[path]);
+      }
+      return Promise.reject(new Error(`Document not found: ${path}`));
+    };
+    return compile(input, { resolver });
+  }
+);

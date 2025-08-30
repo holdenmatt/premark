@@ -8,9 +8,9 @@ Premark is a markdown-to-markdown preprocessor that enables composable, reusable
 
 It adds three features to markdown:
 
-- **Vars** - Replace `{{ variable }}` placeholders with values from frontmatter
-- **Transclusion** - Include content from other files using `@path/to/filename.md` syntax
-- **Extends** - Extend parent docs and override their vars
+- **@include** content from other files using `@path/to/filename.md` syntax
+- **{{variable}}** substitution from frontmatter
+- **extends** keyword to inherit from a parent spec
 
 It reads standard markdown (of any flavor), processes it, and outputs markdown:
 
@@ -84,7 +84,6 @@ To retain frontmatter values in the output, put them under the `output:` key:
 ```
 ---
 name: My spec   # stripped
-version: 1.0.2  # stripped
 output:         # preserved in output
   temperature: 0.7
 ---
@@ -124,8 +123,8 @@ premark/
 
 For detailed specs and test cases:
 
-- [Vars](https://github.com/holdenmatt/premark/blob/main/specs/vars.spec.md)
 - [Transclusion](https://github.com/holdenmatt/premark/blob/main/specs/transclusion.spec.md)
+- [Vars](https://github.com/holdenmatt/premark/blob/main/specs/vars.spec.md)
 - [Extends](https://github.com/holdenmatt/premark/blob/main/specs/extends.spec.md)
 
 ## Prior Art
@@ -134,12 +133,8 @@ For detailed specs and test cases:
 - Knuth's literate programming (1984) - weaving documents from components
 - Jekyll's template inheritance with `layout` and `{{ content }}`
 - CSS cascade model for variable inheritance
-- Long history of preprocessors: cpp for C, Sass/LESS for CSS, and now premark for markdown
+- Long history of preprocessors: from cpp for C to Sass/LESS for CSS
 
 ## License
 
 MIT
-
-- frontmatter
-- @includes
-- {{variables}}
