@@ -21,3 +21,20 @@ export function createFileResolver(
     }
   };
 }
+
+/**
+ * Creates a memory resolver for in-memory documents
+ *
+ * @param files - A map of file paths to document content
+ * @returns A resolver function that loads documents from memory
+ */
+export function createMemoryResolver(
+  files?: Record<string, string>
+): DocumentResolver {
+  return (path: string) => {
+    if (files && path in files) {
+      return Promise.resolve(files[path]);
+    }
+    return Promise.reject(new Error(`Document not found: ${path}`));
+  };
+}
