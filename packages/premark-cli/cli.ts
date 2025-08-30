@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { compile, createFileResolver } from '@holdenmatt/premark';
 import { Command } from 'commander';
-import { version } from '../package.json';
+import { version } from './package.json';
 
 const program = new Command();
 
