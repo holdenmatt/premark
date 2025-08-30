@@ -103,20 +103,15 @@ Content here...
 
 ```
 premark/
-├── src/
-│   ├── index.ts        # Library exports
-│   ├── cli.ts          # CLI entry point
-│   ├── compiler.ts     # Main compilation logic
-│   ├── extends.ts      # Extends implementation
-│   ├── resolver.ts     # Document path resolution
-│   ├── include.ts      # Include implementation
-│   ├── vars.ts         # Variable substitution
-│   └── types.ts        # TypeScript types
-├── specs/              # Feature specs & test cases
-├── tests/              # Vitest test suite
-├── dist/               # Built output
-├── tsup.config.ts      # Build configuration
-└── package.json
+├── packages/
+│   ├── premark/        # Core TypeScript library (ESM)
+│   └── premark-cli/    # CLI package (bin: `premark`)
+├── specs/              # Markdown specs
+├── tests/              # Markdown test cases
+├── examples/           # Example markdown files
+├── pnpm-workspace.yaml # Workspace config
+├── tsconfig.base.json  # Shared TS config
+└── package.json        # Workspace scripts
 ```
 
 ## Specs

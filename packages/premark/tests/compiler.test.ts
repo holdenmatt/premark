@@ -5,21 +5,21 @@ import { processExtends } from '../src/extends';
 import { createMemoryResolver } from '../src/resolver';
 
 testmark(
-  '../../specs/vars.tests.md',
+  '../../tests/vars.test.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }
 );
 
 testmark(
-  '../../specs/include.tests.md',
+  '../../tests/include.test.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }
 );
 
 testmark(
-  '../../specs/extends.tests.md',
+  '../../tests/extends.test.md',
   async (input: string, files?: Record<string, string>) => {
     const parsed = matter(input);
     const result = await processExtends({
@@ -31,7 +31,7 @@ testmark(
 );
 
 testmark(
-  '../../specs/compiler.tests.md',
+  '../../tests/compiler.test.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }
