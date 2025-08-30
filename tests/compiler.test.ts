@@ -12,7 +12,7 @@ testmark(
 );
 
 testmark(
-  'specs/transclusion.tests.md',
+  'specs/include.tests.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }
@@ -31,7 +31,7 @@ testmark(
 );
 
 testmark(
-  'specs/e2e.tests.md',
+  'specs/compiler.tests.md',
   (input: string, files?: Record<string, string>) => {
     return compile(input, { resolver: createMemoryResolver(files) });
   }

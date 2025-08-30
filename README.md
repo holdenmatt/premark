@@ -109,7 +109,7 @@ premark/
 │   ├── compiler.ts     # Main compilation logic
 │   ├── extends.ts      # Extends implementation
 │   ├── resolver.ts     # Document path resolution
-│   ├── transclusion.ts # Transclusion implementation
+│   ├── include.ts      # Include implementation
 │   ├── vars.ts         # Variable substitution
 │   └── types.ts        # TypeScript types
 ├── specs/              # Feature specs & test cases
@@ -123,7 +123,7 @@ premark/
 
 For detailed specs and test cases:
 
-- [Transclusion](https://github.com/holdenmatt/premark/blob/main/specs/transclusion.spec.md)
+- [Includes](https://github.com/holdenmatt/premark/blob/main/specs/include.spec.md)
 - [Vars](https://github.com/holdenmatt/premark/blob/main/specs/vars.spec.md)
 - [Extends](https://github.com/holdenmatt/premark/blob/main/specs/extends.spec.md)
 

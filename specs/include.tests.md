@@ -1,8 +1,8 @@
-# Transclusion Test Cases
+# Include Test Cases
 
 ## Core Features
 
-### Basic Transclusion
+### Basic Include
 
 Simple document reference.
 
@@ -25,7 +25,7 @@ Main content here.
 </output>
 ```
 
-### Multiple Transclusions
+### Multiple Includes
 
 Multiple references in one document.
 
@@ -74,7 +74,7 @@ Component header
 
 ### Apply Indentation
 
-Indentation before @ is applied to each line of transcluded content.
+Indentation before @ is applied to each line of included content.
 
 ```
 <file name="list.md">
@@ -124,7 +124,7 @@ End
 </output>
 ````
 
-## Recursive Transclusion
+## Recursive Includes
 
 ### Nested References
 
@@ -154,7 +154,7 @@ Outer end
 
 ### Frontmatter Not Included
 
-Only content is transcluded, not frontmatter.
+Only content is included, not frontmatter.
 
 ```
 <file name="doc.md">
@@ -175,7 +175,7 @@ Document content only
 
 ### Empty Document
 
-Transcluding empty document.
+Including empty document.
 
 ```
 <file name="empty.md"></file>
@@ -193,7 +193,7 @@ After
 </output>
 ```
 
-### Inline @ Not Transcluded
+### Inline @ Not Included
 
 @ in middle of line is not a reference.
 
@@ -211,7 +211,7 @@ Contact @alice for details
 
 ### @ With Space After
 
-Space between @ and path means no transclusion.
+Space between @ and path means no include.
 
 ```
 <input>
@@ -225,7 +225,7 @@ Space between @ and path means no transclusion.
 
 ### @ At End of Line
 
-@ with no path is not transcluded.
+@ with no path is not included.
 
 ```
 <input>

@@ -4,7 +4,7 @@
 
 ### All Modules Together
 
-Extends + vars + transclusion working in correct order.
+Extends + vars + includes working in correct order.
 
 ```
 <file name="base.md">
@@ -39,7 +39,7 @@ Child content by Original Author
 
 ### Content Slot With All Features
 
-Layout with {{ content }} marker, vars, and transclusion.
+Layout with {{ content }} marker, vars, and includes.
 
 ```
 <file name="layout.md">
@@ -70,7 +70,7 @@ Page content here
 
 ### Three Level Cascade
 
-Variables cascade through grandparent → parent → child with transclusion.
+Variables cascade through grandparent → parent → child with includes.
 
 ```
 <file name="grandparent.md">

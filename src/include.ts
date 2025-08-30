@@ -1,14 +1,14 @@
 import { type CompilationContext, type Document, parseDocument } from './types';
 
 /**
- * Process transclusion references in a document
+ * Process include references in a document
  *
  * - Replaces lines containing only @path with document content
- * - Preserves indentation when transcluding
- * - Processes transclusions recursively
+ * - Preserves indentation when including
+ * - Processes includes recursively
  * - Detects circular references
  */
-export async function processTransclusions(
+export async function processIncludes(
   context: CompilationContext,
   _visitedPaths: Set<string> = new Set()
 ): Promise<Document> {
@@ -38,8 +38,8 @@ export async function processTransclusions(
       const newVisited = new Set(_visitedPaths);
       newVisited.add(path);
 
-      // Recursively process transclusions in the transcluded document
-      const transcludedDoc = await processTransclusions(
+      // Recursively process includes in the included document
+      const includedDoc = await processIncludes(
         {
           document: { frontmatter, content },
           resolver,
@@ -47,20 +47,20 @@ export async function processTransclusions(
         newVisited
       );
 
-      if (transcludedDoc.content === '') {
+      if (includedDoc.content === '') {
         // For empty documents, replace the line with empty string
         processedLines.push('');
       } else {
-        // Apply indentation to each line of transcluded content
-        const transcludedLines = transcludedDoc.content.split('\n');
-        const indentedLines = transcludedLines.map(
+        // Apply indentation to each line of included content
+        const includedLines = includedDoc.content.split('\n');
+        const indentedLines = includedLines.map(
           (l) => (l ? indent + l : l) // Don't add indent to empty lines
         );
 
         processedLines.push(...indentedLines);
       }
     } else {
-      // Not a transclusion line, keep as-is
+      // Not an include line, keep as-is
       processedLines.push(line);
     }
   }

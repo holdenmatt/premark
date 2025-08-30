@@ -29,4 +29,4 @@ Implements document inheritance through the `extends` field in frontmatter, allo
 
 7. **Missing parent**: Error if parent document cannot be resolved
 
-8. **Processing order**: Extends are processed before variables and transclusions
+8. **Processing order**: Extends are processed before variables and includes

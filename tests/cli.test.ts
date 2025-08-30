@@ -36,7 +36,7 @@ Hello {{ name }}!`;
     expect(stdout).toBe('Hello World!');
   });
 
-  it('resolves transclusions relative to file directory', async () => {
+  it('resolves includes relative to file directory', async () => {
     const baseFile = join(tempDir, 'base.md');
     const mainFile = join(tempDir, 'main.md');
 

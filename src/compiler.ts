@@ -1,6 +1,6 @@
 import matter from 'gray-matter';
 import { processExtends } from './extends';
-import { processTransclusions } from './transclusion';
+import { processIncludes } from './include';
 import {
   type CompilationContext,
   type Document,
@@ -22,7 +22,7 @@ export type CompileOptions = {
  * 2. Process extends (inheritance)
  * 3. Merge CLI variables (override frontmatter)
  * 4. Process variables (substitution)
- * 5. Process transclusions (@ references)
+ * 5. Process includes (@ references)
  * 6. Format output
  */
 export async function compile(
@@ -48,7 +48,7 @@ export async function compile(
   }
 
   document = await processVars({ ...context, document });
-  document = await processTransclusions({ ...context, document });
+  document = await processIncludes({ ...context, document });
 
   // Format output - processVars has already extracted the output fields
   if (Object.keys(document.frontmatter).length > 0) {
