@@ -14,5 +14,4 @@ npm-debug.log*
 .env.local
 
 .DS_Store
-TODO.md
-.claude/CLAUDE.md
+CLAUDE.md

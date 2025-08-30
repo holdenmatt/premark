@@ -1,8 +1,8 @@
 import { testmark } from '@holdenmatt/testmark/vitest';
 import matter from 'gray-matter';
-import { compile } from '../src/compiler';
-import { processExtends } from '../src/extends';
-import { createMemoryResolver } from '../src/resolver';
+import { compile } from '../typescript/src/compiler';
+import { processExtends } from '../typescript/src/extends';
+import { createMemoryResolver } from '../typescript/src/resolver';
 
 testmark(
   'specs/vars.tests.md',
