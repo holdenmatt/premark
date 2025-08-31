@@ -1,6 +1,6 @@
 {
   "name": "@holdenmatt/spectree-cli",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "CLI for the spectree markdown preprocessor",
   "author": "Matt Holden",
   "license": "MIT",

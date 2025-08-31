@@ -32,8 +32,23 @@ program
   .name('spectree')
   .description('A minimal markdown preprocessor for composable instructions')
   .version(version)
-  .argument('<input>', 'Input file path')
-  .option('--var <value>', 'set variable (repeatable)', collectVars, {})
+  .argument('<input>', 'Path to markdown file to process')
+  .option(
+    '--var <key=value>',
+    'Set a variable (can be used multiple times)',
+    collectVars,
+    {}
+  )
+  .addHelpText(
+    'after',
+    `
+Examples:
+  $ spectree README.md
+  $ spectree spec.md --var name=Matt
+  $ spectree template.md > output.md
+
+For more information, visit: https://github.com/holdenmatt/spectree`
+  )
   .action(async (input: string, options: { var: Record<string, string> }) => {
     try {
       const inputPath = resolve(input);
@@ -51,5 +66,10 @@ program
       process.exit(1);
     }
   });
+
+// Show help if no arguments provided
+if (process.argv.length === 2) {
+  program.help();
+}
 
 program.parse();
