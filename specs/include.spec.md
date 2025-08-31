@@ -1,14 +1,13 @@
 # Includes Spec
 
-Replaces `@reference` patterns in content with the content of referenced documents.
+Replaces `@` references (by file path) to the content of referenced documents.
 
 > [Test cases](include.tests.md)
-
-*Note: `@references` in variable values are handled by the vars module, not includes. This allows variables to inject `@references` into content that will then be included.*
 
 ## Rules
 
 1. **Pattern matching**: `@` must be the first non-whitespace character on a line, followed by a document path
+
 - Line format: optional whitespace, `@`, path (e.g., `@header.md`, `  @components/footer.md`)
 - Path interpretation depends on the resolver
 
@@ -23,3 +22,5 @@ Replaces `@reference` patterns in content with the content of referenced documen
 6. **No frontmatter merging**: Only content is included, frontmatter is ignored
 
 7. **Processing order**: Process includes after variables (so variables are already resolved)
+
+_Note: `@references` in variable values are handled by the vars module, not includes. This allows variables to inject `@references` into content that will then be included._

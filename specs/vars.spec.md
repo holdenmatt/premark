@@ -6,8 +6,6 @@ Substitutes `{{ variable }}` placeholders with values defined in frontmatter.
 
 ## Rules
 
-_Note: Variable inheritance/cascading through `extends` is covered in the Extends spec._
-
 1. **Substitution**: Replace `{{ name }}` in content with corresponding frontmatter field value
 
 2. **Matching**: Exactly two braces, optional whitespace around name: `{{name}}`, `{{ name }}`, `{{  name  }}`
@@ -21,3 +19,5 @@ _Note: Variable inheritance/cascading through `extends` is covered in the Extend
 6. **Missing variables**: Error if a placeholder has no corresponding variable
 
 7. **Cleanup**: All frontmatter is removed from output except any fields under an `output:` key
+
+_Note: Variable inheritance/cascading through `extends` is covered in the Extends spec._

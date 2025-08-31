@@ -1,102 +1,141 @@
 # SpecTree
 
-A markdown preprocessor for composable, reusable LLM specs.
+SpecTree is a Markdown format for writing composable specs for LLM tools.
 
-## What it does
+The format is standard Markdown (of any flavor), with 3 additions:
 
-SpecTree is a markdown-to-markdown preprocessor that enables composable, reusable instructions for LLM tools like Claude Code, Cursor, and other AI coding assistants.
+- `{{variable}}` substitution from frontmatter
+- `@include` content from other files by path
+- `extends` keyword to inherit from a parent spec
 
-It adds three features to markdown:
+This project defines the SpecTree format via language agnostic specs and test cases.
 
-- **@include** content from other files using `@path/to/filename.md` syntax
-- **{{variable}}** substitution from frontmatter
-- **extends** keyword to inherit from a parent spec
+It also provides a `spectree` Markdown-to-Markdown preprocessor (as TypeScript/Python libraries or a CLI tool)
+to resolve a SpecTree to its final output.
 
-It reads standard markdown (of any flavor), processes it, and outputs markdown:
+## Why SpecTree?
 
-```bash
-spectree input.md > output.md
-```
+AI coding tools like Claude Code, Codex, or Jules are now very capable of following long detailed instructions,
+but they're typically limited by a context bottleneck. How do we feed them sufficient high quality instructions about what we want them to do?
 
-## Install
+Long monolithic prompts are hard to read, maintain, reuse, or share.
+
+SpecTree lets you build context and specs like software - out of modular, composable, versionable pieces.
+
+## Quick Start
+
+### CLI
 
 ```bash
 npm install -g @holdenmatt/spectree-cli
+
+# Create example files
+echo "Hello @world.md" > hello.md
+echo "World!" > world.md
+
+# Compile
+spectree hello.md
+# Output: Hello World!
 ```
 
-## Example
+### TypeScript
 
-Base template (`assistant.md`):
+```bash
+npm install @holdenmatt/spectree
+```
+
+```typescript
+import { compile } from "@holdenmatt/spectree";
+
+const output = await compile("path/to/spec.md");
+console.log(output);
+```
+
+### Python
+
+```bash
+pip install spectree
+```
+
+```python
+from spectree import compile
+
+output = compile('path/to/spec.md')
+print(output)
+```
+
+## Features
+
+SpecTree adds three features to standard Markdown: Includes, Vars, and Extends.
+
+### Includes
+
+Include content from another file by path:
+
+```markdown
+# Project Spec
+
+@requirements.md
+@design/system.md
+```
+
+### Vars
+
+Substitute variables from frontmatter:
 
 ```markdown
 ---
-tone: helpful
+role: helpful assistant
+tone: friendly
 ---
 
-You are a {{ tone }} assistant.
-
-{{ content }}
+You are a {{role}} with a {{tone}} tone.
 ```
 
-Specialized assistant (`code-reviewer.md`):
+Output:
+
+```markdown
+You are a helpful assistant with a friendly tone.
+```
+
+### Extends
+
+Inherit from a parent spec with variable overrides:
 
 ```markdown
 ---
-extends: assistant.md
-tone: constructive
+extends: base-assistant.md
+role: code reviewer
+tone: professional and concise
 ---
 
-Review this PR for bugs and style issues.
-
-@guidelines.md
+Focus on finding bugs and style issues.
 ```
 
-Shared context (`guidelines.md`):
-
-```markdown
-Follow team conventions and best practices.
-```
-
-Running `spectree code-reviewer.md` outputs:
-
-```markdown
-You are a constructive assistant.
-
-Review this PR for bugs and style issues.
-
-Follow team conventions and best practices.
-```
+The parent can use `{{content}}` to control where child content is inserted, or it's appended by default.
 
 ## How it works
 
 1. **Parse** frontmatter
 2. **Resolve** parent documents recursively
 3. **Cascade** variables (child overrides parent)
-4. **Substitute** variables and @ references
-5. **Output** compiled markdown
+4. **Substitute** variables ({{vars}})
+5. **Process** includes (@references)
+6. **Output** compiled markdown
 
 ## Frontmatter
 
-By default, all frontmatter is stripped from the compiled output. This lets you use frontmatter for documentation, metadata, or versioning without polluting the final markdown.
+By default, all frontmatter is stripped from the compiled output.
+This lets you use frontmatter for metadata (eg author, version, date, etc) without polluting the output an LLM would see.
 
-To retain frontmatter values in the output, put them under the `output:` key:
+To preserve specific values in output, use the `output:` key:
 
-```
+```yaml
 ---
-name: My spec   # stripped
-output:         # preserved in output
-  temperature: 0.7
+author: Matt Holden # stripped
+output:
+  temperature: 0.7 # preserved
 ---
-Content here...
-```
-
-Compiles to:
-
-```
----
-temperature: 0.7
----
-Content here...
 ```
 
 ## Project Structure
@@ -108,16 +147,10 @@ spectree/
 │   └── spectree-cli/    # CLI package (bin: `spectree`)
 ├── specs/              # Markdown specs
 ├── tests/              # Markdown test cases
-└── examples/           # Example markdown files
+└── examples/           # SpecTree examples
 ```
 
-## Specs
-
-For detailed specs and test cases:
-
-- [Includes](https://github.com/holdenmatt/spectree/blob/main/specs/include.spec.md)
-- [Vars](https://github.com/holdenmatt/spectree/blob/main/specs/vars.spec.md)
-- [Extends](https://github.com/holdenmatt/spectree/blob/main/specs/extends.spec.md)
+For detailed specs and edge case handling, see the `/specs` folder and corresponding test cases.
 
 ## Prior Art
 
