@@ -1,6 +1,6 @@
 {
   "name": "@holdenmatt/spectree-cli",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "CLI for the spectree markdown preprocessor",
   "author": "Matt Holden",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "prepublishOnly": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@holdenmatt/spectree": "workspace:*",
+    "@holdenmatt/spectree": "^0.0.6",
     "commander": "^14.0.0"
   },
   "devDependencies": {

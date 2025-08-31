@@ -1,13 +1,13 @@
 {
   "name": "@holdenmatt/spectree",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A markdown preprocessor for composable, reusable LLM specs.",
   "author": "Matt Holden",
   "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/holdenmatt/spectree"
+    "url": "git+https://github.com/holdenmatt/spectree.git"
   },
   "homepage": "https://github.com/holdenmatt/spectree",
   "scripts": {
