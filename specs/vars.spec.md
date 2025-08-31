@@ -14,7 +14,7 @@ Substitutes `{{ variable }}` placeholders with values defined in frontmatter.
 
 4. **Document references**: Values starting with `@` resolve to another document's content (frontmatter excluded)
 
-5. **Type coercion**: Strings pass through, all other types use `JSON.stringify()` (with no indent)
+5. **Strings only**: Values are treated as literal strings (eg numbers/booleans as `30`, `true`). Quote complex values for exact formatting
 
 6. **Missing variables**: Error if a placeholder has no corresponding variable
 

@@ -31,9 +31,8 @@ export function documentsEqual(a: Document, b: Document): boolean {
     if (!bKeys.includes(key)) {
       return false;
     }
-    if (
-      JSON.stringify(a.frontmatter[key]) !== JSON.stringify(b.frontmatter[key])
-    ) {
+    // Compare using string coercion for simplicity and to match vars behavior
+    if (String(a.frontmatter[key]) !== String(b.frontmatter[key])) {
       return false;
     }
   }

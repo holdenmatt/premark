@@ -57,18 +57,17 @@ hyphenated underscore uppercase mixed
 </output>
 ```
 
-### Type Coercion
+### Strings Only
 
-Non-string values are converted to strings.
+Variable values are treated as strings and substituted as-is. Quote values to control exact output.
 
 ```
 <input>
 ---
 count: 42
 enabled: true
-items: [1, 2, 3]
-config:
-  key: value
+items: "[1, 2, 3]"
+config: "{\"key\":\"value\"}"
 nothing: null
 ---
 Count: {{ count }}
@@ -81,7 +80,7 @@ Nothing: {{ nothing }}
 <output>
 Count: 42
 Enabled: true
-Items: [1,2,3]
+Items: [1, 2, 3]
 Config: {"key":"value"}
 Nothing: null
 </output>

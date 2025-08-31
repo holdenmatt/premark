@@ -34,10 +34,8 @@ export async function processVars(
     } else if (typeof value === 'string') {
       processedContent = processedContent.replace(pattern, value);
     } else {
-      processedContent = processedContent.replace(
-        pattern,
-        JSON.stringify(value)
-      );
+      // Treat all non-string values as strings for substitution
+      processedContent = processedContent.replace(pattern, String(value));
     }
   }
 
