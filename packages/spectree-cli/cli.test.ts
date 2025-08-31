@@ -58,7 +58,7 @@ Hello {{ name }}!`;
   });
   it('shows help when no arguments provided', async () => {
     const { stdout } = await exec('node', [CLI_PATH]);
-    
+
     expect(stdout).toContain('Usage: spectree');
     expect(stdout).toContain('Path to markdown file to process');
     expect(stdout).toContain('Examples:');

@@ -1,10 +1,15 @@
 {
   "name": "@holdenmatt/spectree-cli",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "CLI for the spectree markdown preprocessor",
   "author": "Matt Holden",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holdenmatt/spectree.git"
+  },
+  "homepage": "https://github.com/holdenmatt/spectree",
   "bin": {
     "spectree": "./dist/cli.js"
   },
