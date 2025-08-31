@@ -13,6 +13,9 @@ npm-debug.log*
 .env
 .env.local
 
+# IDE
+.vscode/
 .DS_Store
+
 CLAUDE.md
 TODO.md
